@@ -117,7 +117,7 @@ export interface Profile {
 	location: string;
 	workFormat: string;
 	status: string;
-	/** Ссылка на PDF-резюме; пока его нет, кнопка не показывается. */
+	/** Ссылка на PDF-резюме; без неё кнопка не показывается. */
 	resumeUrl?: string;
 	about: string;
 	contactsLead: string;
@@ -153,6 +153,8 @@ const ru: Profile = {
 	location: 'Томск',
 	workFormat: 'удалённо или переезд',
 	status: 'открыт к предложениям',
+	// Собирается командой npm run resume из этих же данных.
+	resumeUrl: '/Dogaev_Flutter_Developer_ru.pdf',
 	about: 'Пишу на Flutter с 2021 года, до этого полтора года разрабатывал на Java. 4,5 года в Crypton Studio делал крипто- и финтех-приложения: биржи, кошельки, необанки. Проектирую архитектуру и дизайн-системы, провожу код-ревью, собрал внутренний Starter Kit компании. В 2020 году занял первое место на региональном WorldSkills по мобильной разработке.',
 	contactsLead: 'Открыт к предложениям: удалённо или с переездом. Быстрее всего отвечаю в Telegram.',
 	stats: [
@@ -434,6 +436,7 @@ const en: Profile = {
 	location: 'Tomsk, Russia',
 	workFormat: 'remote or relocation',
 	status: 'open to offers',
+	resumeUrl: '/Dogaev_Flutter_Developer_en.pdf',
 	about: 'I have been building with Flutter since 2021, after a year and a half of Java development. At Crypton Studio I spent 4.5 years on crypto and fintech apps: exchanges, wallets and neobanks. I design app architecture and design systems, review code and built the company’s internal Starter Kit. In 2020 I took first place in mobile development at the regional WorldSkills championship.',
 	contactsLead: 'Open to offers, remote or with relocation. Telegram is the fastest way to reach me.',
 	stats: [
