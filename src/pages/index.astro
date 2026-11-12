@@ -1,8 +1,13 @@
 ---
+import Hero from '../components/Hero.astro';
+import TopBar from '../components/TopBar.astro';
 import Layout from '../layouts/Layout.astro';
 import { profile } from '../data/profile';
 ---
 
 <Layout title={`${profile.fullName} — ${profile.role}`}>
-	<main></main>
+	<TopBar />
+	<main>
+		<Hero />
+	</main>
 </Layout>

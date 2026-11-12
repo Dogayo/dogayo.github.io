@@ -61,4 +61,30 @@
 
 	--font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 	--font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+	/* Шкала текста из макета Penpot (Foundations). */
+	--text-display: 3rem;
+	--text-display--line-height: 1.1;
+	--text-display--letter-spacing: -0.02em;
+	--text-display-m: 2rem;
+	--text-display-m--line-height: 1.15;
+	--text-display-m--letter-spacing: -0.02em;
+	--text-h2: 1.5rem;
+	--text-h2--line-height: 1.25;
+	--text-h2--letter-spacing: -0.01em;
+	--text-h3: 1.125rem;
+	--text-h3--line-height: 1.4;
+	--text-body: 1rem;
+	--text-body--line-height: 1.6;
+	--text-small: 0.875rem;
+	--text-small--line-height: 1.55;
+	--text-caption: 0.75rem;
+	--text-caption--line-height: 1.35;
+	--text-caption--letter-spacing: 0.02em;
+	--text-mono: 0.8125rem;
+	--text-mono--line-height: 1.5;
+	--text-mono-s: 0.75rem;
+	--text-mono-s--line-height: 1.4;
+	--text-stat: 1.75rem;
+	--text-stat--line-height: 1.1;
 }

@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import photo from '../assets/photo.jpg';
+import { profile } from '../data/profile';
+
+const telegram = profile.contacts.find((c) => c.kind === 'telegram');
+const links = profile.contacts.filter((c) => c.kind === 'email' || c.kind === 'github');
+
+// Строки в духе вывода neofetch.
+const keys = [
+	{ key: 'role', value: profile.role },
+	{ key: 'exp', value: profile.stats.map((s) => `${s.value} ${s.label}`).join(' · ') },
+	{ key: 'stack', value: profile.stack.join(', ') },
+	{ key: 'loc', value: `${profile.location} · ${profile.workFormat}` },
+	{ key: 'status', value: profile.status, accent: true },
+];
+
+const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-soft', 'bg-accent'];
+---
+
+<section class="mx-auto flex max-w-[1072px] flex-col gap-5 px-4 pt-8 md:pt-20">
+	<div class="overflow-hidden rounded-2xl border border-border bg-surface">
+		<div class="flex items-center gap-1.5 bg-surface-2 px-3.5 py-2.5" aria-hidden="true">
+			<span class="size-2.5 rounded-full bg-border"></span>
+			<span class="size-2.5 rounded-full bg-border"></span>
+			<span class="size-2.5 rounded-full bg-border"></span>
+			<span class="ml-2 font-mono text-mono-s text-muted">dogayo@portfolio: ~</span>
+		</div>
+
+		<div class="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3.5 gap-y-4 p-4 md:grid-cols-[220px_minmax(0,1fr)] md:gap-x-10 md:gap-y-3.5 md:p-8">
+			<Image
+				src={photo}
+				alt={profile.fullName}
+				widths={[144, 440]}
+				sizes="(min-width: 768px) 220px, 72px"
+				loading="eager"
+				fetchpriority="high"
+				class="size-[72px] rounded-[10px] object-cover md:row-span-2 md:size-[220px] md:rounded-xl"
+			/>
+
+			<div class="self-center md:self-start">
+				<p class="font-mono text-mono-s text-accent md:text-mono">$ neofetch</p>
+				<h1 class="text-h2 font-bold md:mt-3.5 md:text-display">{profile.fullName}</h1>
+			</div>
+
+			<div class="col-span-2 flex flex-col gap-3 md:col-span-1 md:col-start-2 md:gap-3.5">
+				<hr class="border-border" />
+				<dl class="grid grid-cols-[56px_minmax(0,1fr)] gap-x-2 gap-y-1.5 font-mono text-mono">
+					{keys.map(({ key, value, accent }) => (
+						<>
+							<dt class="text-accent">{key}</dt>
+							<dd class:list={[accent ? 'text-accent' : 'text-text']}>{value}</dd>
+						</>
+					))}
+				</dl>
+				<div class="flex" aria-hidden="true">
+					{palette.map((color) => <span class:list={['h-3 w-5 md:w-6', color]}></span>)}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<p class="text-body md:text-h3 md:font-medium">{profile.tagline}</p>
+
+	<div class="flex flex-wrap items-center gap-3">
+		{profile.resumeUrl && (
+			<a href={profile.resumeUrl} class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
+				Скачать резюме
+			</a>
+		)}
+		{telegram && (
+			<a
+				href={telegram.url}
+				class:list={[
+					'rounded-[10px] px-5 py-3 text-small font-medium transition',
+					// Пока нет PDF-резюме, Telegram — главное действие.
+					profile.resumeUrl
+						? 'border border-border text-text hover:border-accent'
+						: 'bg-accent text-on-accent hover:opacity-90',
+				]}
+			>
+				{telegram.label} ↗
+			</a>
+		)}
+		{links.map((link) => (
+			<a href={link.url} class="px-1 py-3 font-mono text-mono text-text transition-colors hover:text-accent">
+				{link.kind === 'email' ? link.label : link.url.replace('https://', '')} <span class="text-accent">↗</span>
+			</a>
+		))}
+	</div>
+</section>
