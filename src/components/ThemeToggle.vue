@@ -46,12 +46,15 @@ function select(theme: Theme, event: MouseEvent) {
 
 	root.classList.add('theme-transition');
 	const transition = document.startViewTransition(() => apply(theme));
-	transition.ready.then(() => {
-		root.animate(
-			{ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-			{ duration: 500, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' },
-		);
-	});
+	// Браузер может пропустить переход (например, вкладка в фоне) — тема при этом уже применена.
+	transition.ready
+		.then(() => {
+			root.animate(
+				{ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+				{ duration: 500, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' },
+			);
+		})
+		.catch(() => {});
 	transition.finished.finally(() => root.classList.remove('theme-transition'));
 }
 </script>
