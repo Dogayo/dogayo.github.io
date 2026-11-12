@@ -82,27 +82,27 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 	<div class="flex flex-wrap items-center gap-3">
 		<!-- PDF открывается в новой вкладке: в просмотрщике браузера его можно скачать или распечатать. -->
 		{profile.resumeUrl && (
-			<a href={profile.resumeUrl} target="_blank" rel="noopener" class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
-				{profile.ui.downloadResume} <span aria-hidden="true">↗</span>
+			<a href={profile.resumeUrl} target="_blank" rel="noopener" class="group rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition hover:opacity-90 active:scale-[0.97]">
+				{profile.ui.downloadResume} <span class="inline-block transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
 			</a>
 		)}
 		{telegram && (
 			<a
 				href={telegram.url}
 				class:list={[
-					'rounded-[10px] px-5 py-3 text-small font-medium transition',
+					'group rounded-[10px] px-5 py-3 text-small font-medium transition active:scale-[0.97]',
 					// Без PDF-резюме Telegram становится главным действием.
 					profile.resumeUrl
 						? 'border border-border text-text hover:border-accent'
 						: 'bg-accent text-on-accent hover:opacity-90',
 				]}
 			>
-				{telegram.label} <span aria-hidden="true">↗</span>
+				{telegram.label} <span class="inline-block transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
 			</a>
 		)}
 		{links.map((link) => (
-			<a href={link.url} class="px-1 py-3 font-mono text-mono text-text transition-colors hover:text-accent">
-				{link.kind === 'email' ? link.label : link.url.replace('https://', '')} <span class="text-accent" aria-hidden="true">↗</span>
+			<a href={link.url} class="group px-1 py-3 font-mono text-mono text-text transition-colors hover:text-accent">
+				{link.kind === 'email' ? link.label : link.url.replace('https://', '')} <span class="inline-block transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-accent" aria-hidden="true">↗</span>
 			</a>
 		))}
 	</div>

@@ -15,9 +15,9 @@ const contacts = [...profile.contacts].sort((a, b) => order.indexOf(a.kind) - or
 <ul class="flex flex-col gap-1 md:flex-row md:gap-8">
 	{contacts.map((contact) => (
 		<li>
-			<a href={contact.url} class="inline-flex gap-2 py-2 font-mono text-mono text-text transition-colors hover:text-accent">
+			<a href={contact.url} class="group inline-flex gap-2 py-2 font-mono text-mono text-text transition-colors hover:text-accent">
 				{contact.kind === 'email' ? contact.label : contact.url.replace('https://', '')}
-				<span class="text-accent" aria-hidden="true">↗</span>
+				<span class="inline-block transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-accent" aria-hidden="true">↗</span>
 			</a>
 		</li>
 	))}
