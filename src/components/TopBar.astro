@@ -22,7 +22,7 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 ---
 
 <header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
-	<div class="mx-auto flex max-w-[1072px] items-center justify-between gap-3 px-4 py-4">
+	<div class="mx-auto flex max-w-[1072px] items-center justify-between gap-3 px-4 pt-4 pb-2 md:pb-4">
 		<!-- На самых узких экранах (320px) логотип сокращается до «~/», иначе шапка не помещается. -->
 		<a href={localePaths[locale]} aria-label="~/dogayo" class="font-mono text-mono text-text">~/<span class="max-[359px]:hidden">dogayo</span></a>
 		<div class="flex items-center gap-2 sm:gap-3 md:gap-6">
@@ -51,18 +51,35 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 			<ThemeToggle labels={ui.theme} client:load />
 		</div>
 	</div>
+	<!-- На телефоне меню разделов — отдельной строкой под шапкой. -->
+	<nav aria-label={ui.navLabel} class="mx-auto flex max-w-[1072px] justify-between px-4 pb-1.5 md:hidden">
+		{nav.map((item) => (
+			<a
+				href={item.href}
+				data-spy={item.sections.join(' ')}
+				class="py-2 font-mono text-mono-s text-muted transition-colors hover:text-accent aria-[current=location]:text-accent"
+			>
+				{item.label}
+			</a>
+		))}
+	</nav>
 </header>
 
 <script>
 	// Подсветка пункта меню текущего раздела: текущий — последний раздел, чей верх прошёл под шапку.
+	// Пункты меню есть и в десктопной, и в мобильной навигации — подсвечиваются все с тем же href.
 	const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-spy]')];
 	const header = document.querySelector('header');
-	const sections = links.flatMap((link) =>
-		link.dataset.spy!.split(' ').flatMap((id) => {
-			const section = document.getElementById(id);
-			return section ? [{ section, link }] : [];
-		}),
-	);
+	const sections = [
+		...new Map(
+			links.flatMap((link) =>
+				link.dataset.spy!.split(' ').flatMap((id) => {
+					const section = document.getElementById(id);
+					return section ? [[id, { section, href: link.getAttribute('href') }] as const] : [];
+				}),
+			),
+		).values(),
+	];
 	sections.sort((a, b) => a.section.offsetTop - b.section.offsetTop);
 
 	let frame = 0;
@@ -70,14 +87,14 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 		frame = 0;
 		const line = (header?.offsetHeight ?? 0) + window.innerHeight * 0.25;
 		const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
-		let current: HTMLAnchorElement | undefined;
-		for (const { section, link } of sections) {
-			if (section.getBoundingClientRect().top <= line) current = link;
+		let current: string | null | undefined;
+		for (const { section, href } of sections) {
+			if (section.getBoundingClientRect().top <= line) current = href;
 		}
 		// Последний раздел короткий и может не дойти до линии — внизу страницы подсвечиваем его.
-		if (atBottom && sections.length) current = sections[sections.length - 1].link;
+		if (atBottom && sections.length) current = sections[sections.length - 1].href;
 		for (const link of links) {
-			if (link === current) link.setAttribute('aria-current', 'location');
+			if (link.getAttribute('href') === current) link.setAttribute('aria-current', 'location');
 			else link.removeAttribute('aria-current');
 		}
 	};
