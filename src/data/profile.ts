@@ -116,6 +116,11 @@ export interface UiStrings {
 	demo: string;
 	levels: Record<SkillLevel, string>;
 	ageWords: AgeWords;
+	notFound: {
+		title: string;
+		error: string;
+		home: string;
+	};
 }
 
 export interface Profile {
@@ -453,6 +458,11 @@ const ru: Profile = {
 			basic: 'базовый',
 		},
 		ageWords: { one: 'год', few: 'года', many: 'лет', other: 'лет' },
+		notFound: {
+			title: 'Такой страницы нет',
+			error: 'Нет такого файла или каталога',
+			home: 'на главную',
+		},
 	},
 };
 
@@ -728,6 +738,11 @@ const en: Profile = {
 			basic: 'basic',
 		},
 		ageWords: { one: 'year', other: 'years' },
+		notFound: {
+			title: 'Page not found',
+			error: 'No such file or directory',
+			home: 'home',
+		},
 	},
 };
 

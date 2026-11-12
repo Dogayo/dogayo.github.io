@@ -8,9 +8,11 @@ interface Props {
 	/** Подпись к картинке превью для экранных читалок. */
 	imageAlt: string;
 	locale: Locale;
+	/** Не индексировать страницу (404): без canonical и hreflang. */
+	noindex?: boolean;
 }
 
-const { title, description, imageAlt, locale } = Astro.props;
+const { title, description, imageAlt, locale, noindex = false } = Astro.props;
 const canonical = new URL(localePaths[locale], Astro.site).href;
 const image = new URL(`/og/${locale}.png`, Astro.site).href;
 // Ссылки на все языковые версии, чтобы поисковики показывали нужную.
@@ -31,9 +33,15 @@ const ogLocales: Record<Locale, string> = { ru: 'ru_RU', en: 'en_US' };
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<link rel="canonical" href={canonical} />
-		{alternates.map(({ lang, href }) => <link rel="alternate" hreflang={lang} href={href} />)}
-		<link rel="alternate" hreflang="x-default" href={new URL(localePaths[defaultLocale], Astro.site).href} />
+		{noindex ? (
+			<meta name="robots" content="noindex" />
+		) : (
+			<>
+				<link rel="canonical" href={canonical} />
+				{alternates.map(({ lang, href }) => <link rel="alternate" hreflang={lang} href={href} />)}
+				<link rel="alternate" hreflang="x-default" href={new URL(localePaths[defaultLocale], Astro.site).href} />
+			</>
+		)}
 
 		<!-- Превью ссылки в мессенджерах и соцсетях. -->
 		<meta property="og:type" content="website" />
