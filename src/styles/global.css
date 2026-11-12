@@ -73,6 +73,60 @@
 	translate: none;
 }
 
+/* Печать neofetch в шапке: команда набирается по буквам, затем строки вывода появляются по очереди.
+   Только CSS: текст сразу есть в DOM для читалок и без JS; при «уменьшить движение» — без анимации. */
+@media (prefers-reduced-motion: no-preference) {
+	.term-typing {
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		vertical-align: bottom;
+		animation: term-typing 500ms steps(var(--chars)) both;
+	}
+
+	.term-line {
+		animation: term-line 1ms steps(1) both;
+		animation-delay: calc(600ms + var(--line) * 90ms);
+	}
+}
+
+@keyframes term-typing {
+	from {
+		width: 0;
+	}
+	to {
+		width: calc(var(--chars) * 1ch);
+	}
+}
+
+@keyframes term-line {
+	from {
+		opacity: 0;
+	}
+}
+
+/* Переходы между страницами (смена языка): содержимое перетекает, шапка остаётся на месте. */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+
+.site-header {
+	view-transition-name: site-header;
+}
+
+/* Смена темы: вместо перетекания новая тема раскрывается кругом (анимация — в ThemeToggle.vue). */
+.theme-transition .site-header {
+	view-transition-name: none;
+}
+
+.theme-transition::view-transition-old(root),
+.theme-transition::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
 /* Фокус с клавиатуры — акцентной обводкой во всех темах. */
 @layer base {
 	:focus-visible {
