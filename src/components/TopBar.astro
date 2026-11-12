@@ -24,7 +24,7 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 <header class="site-header sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
 	<div class="mx-auto flex max-w-[1072px] items-center justify-between gap-3 px-4 pt-4 pb-2 md:pb-4">
 		<!-- На самых узких экранах (320px) логотип сокращается до «~/», иначе шапка не помещается. -->
-		<a href={localePaths[locale]} aria-label="~/dogayo" class="font-mono text-mono text-text">~/<span class="max-[359px]:hidden">dogayo</span></a>
+		<a href={localePaths[locale]} aria-label="~/dogayo" data-logo class="font-mono text-mono text-text">~/<span class="max-[359px]:hidden">dogayo</span></a>
 		<div class="flex items-center gap-2 sm:gap-3 md:gap-6">
 			<nav aria-label={ui.navLabel} class="hidden gap-6 md:flex">
 				{nav.map((item) => (
@@ -63,7 +63,20 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 			</a>
 		))}
 	</nav>
+	<!-- Прогресс прочтения страницы по нижнему краю шапки (CSS scroll-driven animation). -->
+	<div class="scroll-progress absolute inset-x-0 -bottom-px h-0.5 origin-left bg-accent" aria-hidden="true"></div>
 </header>
+
+<button
+	type="button"
+	data-back-to-top
+	aria-label={ui.backToTop}
+	title={ui.backToTop}
+	inert
+	class="fixed right-4 bottom-4 z-40 grid size-11 translate-y-2 place-items-center rounded-full border border-border bg-surface font-mono text-mono text-text opacity-0 transition duration-200 hover:border-accent hover:text-accent active:scale-[0.97] data-visible:translate-y-0 data-visible:opacity-100 md:right-6 md:bottom-6"
+>
+	<span aria-hidden="true">↑</span>
+</button>
 
 <script>
 	// Подсветка пункта меню текущего раздела: текущий — последний раздел, чей верх прошёл под шапку.
@@ -85,6 +98,7 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 	let frame = 0;
 	const update = () => {
 		frame = 0;
+		updateBackToTop();
 		const line = (header?.offsetHeight ?? 0) + window.innerHeight * 0.25;
 		const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
 		let current: string | null | undefined;
@@ -98,6 +112,19 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 			else link.removeAttribute('aria-current');
 		}
 	};
+	// Кнопка «наверх» появляется после первого экрана; фокус уходит на логотип, чтобы с клавиатуры продолжить сверху.
+	const backToTop = document.querySelector<HTMLButtonElement>('[data-back-to-top]')!;
+	const logo = document.querySelector<HTMLAnchorElement>('[data-logo]')!;
+	const updateBackToTop = () => {
+		const visible = window.scrollY > window.innerHeight;
+		backToTop.toggleAttribute('data-visible', visible);
+		backToTop.inert = !visible;
+	};
+	backToTop.addEventListener('click', () => {
+		window.scrollTo({ top: 0 });
+		logo.focus({ preventScroll: true });
+	});
+
 	const schedule = () => {
 		if (!frame) frame = requestAnimationFrame(update);
 	};

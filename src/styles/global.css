@@ -183,3 +183,25 @@
 		}
 	}
 }
+
+/* Полоса прогресса в шапке растёт вместе со скроллом страницы; где scroll-driven анимаций нет — не показывается. */
+.scroll-progress {
+	display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+	.scroll-progress {
+		display: block;
+		/* Только отдельными свойствами: в шорткате animation минификатор теряет timeline. */
+		animation-name: scroll-progress;
+		animation-timing-function: linear;
+		animation-fill-mode: both;
+		animation-timeline: scroll(root);
+	}
+}
+
+@keyframes scroll-progress {
+	from {
+		scale: 0 1;
+	}
+}
