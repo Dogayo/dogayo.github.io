@@ -78,6 +78,7 @@ export interface SectionTitles {
 	selfEducation: string;
 	courses: string;
 	skills: string;
+	contacts: string;
 	task: string;
 	role: string;
 	solutions: string;
@@ -95,6 +96,7 @@ export interface Profile {
 	/** Ссылка на PDF-резюме; пока его нет, кнопка не показывается. */
 	resumeUrl?: string;
 	about: string;
+	contactsLead: string;
 	stats: Stat[];
 	contacts: Contact[];
 	experience: {
@@ -126,6 +128,7 @@ const ru: Profile = {
 	workFormat: 'удалённо или переезд',
 	status: 'открыт к предложениям',
 	about: 'Пишу на Flutter с 2021 года, до этого полтора года разрабатывал на Java. 4,5 года в Crypton Studio делал крипто- и финтех-приложения: биржи, кошельки, необанки. Проектирую архитектуру и дизайн-системы, провожу код-ревью, собрал внутренний Starter Kit компании. В 2020 году занял первое место на региональном WorldSkills по мобильной разработке.',
+	contactsLead: 'Открыт к предложениям: удалённо или с переездом. Быстрее всего отвечаю в Telegram.',
 	stats: [
 		{ value: '5+', label: 'лет во Flutter' },
 		{ value: '7', label: 'проектов' },
@@ -363,7 +366,8 @@ const ru: Profile = {
 		achievements: 'Достижения',
 		selfEducation: 'Дополнительное образование',
 		courses: 'Курсы и сертификации',
-		skills: 'Технологии и навыки',
+		skills: 'Навыки',
+		contacts: 'Контакты',
 		task: 'Задача',
 		role: 'Роль',
 		solutions: 'Решения',
