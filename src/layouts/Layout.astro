@@ -1,14 +1,21 @@
 ---
 import '../styles/global.css';
+import { defaultLocale, localePaths, type Locale } from '../data/profile';
 
 interface Props {
 	title: string;
+	locale: Locale;
 }
 
-const { title } = Astro.props;
+const { title, locale } = Astro.props;
+// Ссылки на все языковые версии, чтобы поисковики показывали нужную.
+const alternates = (Object.entries(localePaths) as [Locale, string][]).map(([lang, path]) => ({
+	lang,
+	href: new URL(path, Astro.site).href,
+}));
 ---
 
-<html lang="ru">
+<html lang={locale}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,6 +23,8 @@ const { title } = Astro.props;
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		{alternates.map(({ lang, href }) => <link rel="alternate" hreflang={lang} href={href} />)}
+		<link rel="alternate" hreflang="x-default" href={new URL(localePaths[defaultLocale], Astro.site).href} />
 		<!-- Ставит тему до отрисовки, чтобы не было мигания: сохранённый выбор или системная настройка. -->
 		<script is:inline>
 			(() => {

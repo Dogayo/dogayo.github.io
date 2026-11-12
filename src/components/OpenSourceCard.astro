@@ -1,17 +1,18 @@
 ---
-import type { Project, SectionTitles } from '../data/profile';
+import type { Profile, Project } from '../data/profile';
 
 interface Props {
 	project: Project;
-	titles: SectionTitles;
+	profile: Profile;
 }
 
-const { project, titles } = Astro.props;
+const { project, profile } = Astro.props;
+const { titles, ui } = profile;
 
 const links = [
 	{ href: project.repoUrl, label: project.repoUrl?.replace('https://', '') },
-	{ href: project.apkUrl, label: 'APK в релизах' },
-	{ href: project.demoUrl, label: 'Демо дизайн-системы' },
+	{ href: project.apkUrl, label: ui.apk },
+	{ href: project.demoUrl, label: ui.demo },
 ].filter((link): link is { href: string; label: string } => Boolean(link.href && link.label));
 ---
 
@@ -39,7 +40,7 @@ const links = [
 		</ul>
 	</div>
 
-	<ul class="flex flex-wrap gap-1.5" aria-label="Стек">
+	<ul class="flex flex-wrap gap-1.5" aria-label={ui.stack}>
 		{project.tags.map((tag) => (
 			<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
 		))}

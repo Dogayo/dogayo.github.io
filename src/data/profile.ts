@@ -1,7 +1,7 @@
 // Весь текст сайта. Разметка только читает эти данные, при сборке они превращаются в HTML.
-// Чтобы добавить язык, расширьте Locale и добавьте объект в profiles: TypeScript потребует все поля.
+// Чтобы добавить язык, расширьте Locale, добавьте объект в profiles и путь в localePaths: TypeScript потребует все поля.
 
-export type Locale = 'ru';
+export type Locale = 'ru' | 'en';
 
 export type SkillLevel = 'expert' | 'intermediate' | 'basic';
 
@@ -85,6 +85,28 @@ export interface SectionTitles {
 	results: string;
 }
 
+/** Подписи интерфейса: навигация, кнопки, aria-метки. */
+export interface UiStrings {
+	nav: {
+		experience: string;
+		projects: string;
+		skills: string;
+		contacts: string;
+	};
+	navLabel: string;
+	theme: {
+		label: string;
+		light: string;
+		dark: string;
+	};
+	language: string;
+	downloadResume: string;
+	stack: string;
+	apk: string;
+	demo: string;
+	levels: Record<SkillLevel, string>;
+}
+
 export interface Profile {
 	fullName: string;
 	role: string;
@@ -109,6 +131,7 @@ export interface Profile {
 	courses: string[];
 	skills: SkillGroup[];
 	titles: SectionTitles;
+	ui: UiStrings;
 }
 
 const ru: Profile = {
@@ -373,10 +396,296 @@ const ru: Profile = {
 		solutions: 'Решения',
 		results: 'Результат',
 	},
+	ui: {
+		nav: {
+			experience: 'опыт',
+			projects: 'проекты',
+			skills: 'навыки',
+			contacts: 'контакты',
+		},
+		navLabel: 'Разделы',
+		theme: {
+			label: 'Тема',
+			light: 'светлая',
+			dark: 'тёмная',
+		},
+		language: 'Язык',
+		downloadResume: 'Скачать резюме',
+		stack: 'Стек',
+		apk: 'APK в релизах',
+		demo: 'Демо дизайн-системы',
+		levels: {
+			expert: 'эксперт',
+			intermediate: 'рабочий уровень',
+			basic: 'базовый',
+		},
+	},
+};
+
+const en: Profile = {
+	fullName: 'Alexander Dogaev',
+	role: 'Flutter Developer · Middle+',
+	tagline: 'I take Flutter apps from architecture to release on the App Store and Google Play.',
+	stack: ru.stack,
+	location: 'Tomsk, Russia',
+	workFormat: 'remote or relocation',
+	status: 'open to offers',
+	about: 'I have been building with Flutter since 2021, after a year and a half of Java development. At Crypton Studio I spent 4.5 years on crypto and fintech apps: exchanges, wallets and neobanks. I design app architecture and design systems, review code and built the company’s internal Starter Kit. In 2020 I took first place in mobile development at the regional WorldSkills championship.',
+	contactsLead: 'Open to offers, remote or with relocation. Telegram is the fastest way to reach me.',
+	stats: [
+		{ value: '5+', label: 'years in Flutter' },
+		{ value: '7', label: 'projects' },
+		{ value: '50K+', label: 'installs' },
+	],
+	contacts: ru.contacts,
+	experience: {
+		lastPosition: {
+			title: 'Flutter Developer (Middle+)',
+			organization: 'Crypton Studio',
+			period: '07.21 – 01.26',
+			duration: '4.5 years',
+			responsibilities: [
+				'Building crypto and fintech mobile apps: exchanges, wallets, neobanks',
+				'Designing architecture (BLoC, clean architecture, modular structure of internal packages) and design systems; code review',
+				'Trading modules, WebSocket quotes, precise money calculations (decimal), 2FA and biometrics',
+				'Web3 integrations: web3dart, WalletConnect (MetaMask, Trust Wallet), ECDSA/secp256k1 transaction signing',
+				'Internal tooling: the company Starter Kit (3+ projects started on it), code generation from Swagger APIs, Mason templates, a chart drawing tools package',
+				'Performance optimization to 60+ FPS',
+				'Leading project cycles: planning, task assignment, tracking and reporting',
+				'Building, testing and publishing to the App Store and Google Play',
+			],
+		},
+		earlyCareer: {
+			title: 'Java Developer',
+			organization: 'Mirball',
+			period: '02.20 – 06.21',
+			duration: '1 year 5 months',
+			responsibilities: [
+				'Desktop apps for managing and monitoring compute nodes and farms',
+				'PostgreSQL and data model design',
+				'UI built with JavaFX',
+			],
+		},
+	},
+	projects: [
+		{
+			title: 'Crypto exchange and swap service',
+			period: '10.2024 – 01.2026',
+			task: 'A mobile exchange app: trading, market watching, verification.',
+			role: 'Lead Flutter developer — architecture, design system, code review.',
+			solutions: [
+				'WebSocket quotes feeding the order book and charts',
+				'Chart drawing tools extracted into a separate package',
+				'Money calculations with decimal',
+				'2FA, biometrics, KYC',
+			],
+			results: [
+				'Charts and order book hold 60+ FPS under a live quote stream',
+			],
+			tags: ['Flutter', 'BLoC', 'WebSocket', 'decimal', 'Firebase'],
+		},
+		{
+			title: 'Fintech platform (neobank)',
+			period: '12.2024 – 06.2025',
+			task: 'Multi-currency accounts for crypto and fiat operations.',
+			role: 'Flutter developer — design system, features, code review.',
+			solutions: [
+				'Real-time updates via Centrifugo and protobuf',
+				'PIN and biometric sign-in, KYC',
+				'Wallets via WalletConnect',
+				'Rive animations',
+			],
+			results: [],
+			tags: ['Flutter', 'BLoC', 'Centrifugo', 'protobuf', 'WalletConnect'],
+		},
+		{
+			title: 'Sports prediction app',
+			period: '03.2024 – 11.2025',
+			task: 'Predictions on sports events with leagues and leaderboards.',
+			role: 'Flutter developer — design system, features, code review.',
+			solutions: [
+				'Offline access and caching',
+				'In-app purchases',
+				'Firebase: push notifications, analytics, dynamic links',
+			],
+			results: [
+				'50K+ installs and 4.2★ on Google Play',
+			],
+			tags: ['Flutter', 'BLoC', 'Firebase', 'In-app purchases'],
+		},
+		{
+			title: 'Connected car app',
+			period: '11.2022 – 01.2024',
+			task: 'Controlling car features from a phone.',
+			role: 'Flutter developer — design system, features, code review.',
+			solutions: [
+				'Reactive MQTT connection',
+				'Climate control and central locking',
+				'Radio and playlists',
+				'Maps and routes on a Yandex MapKit fork',
+			],
+			results: [],
+			tags: ['Flutter', 'BLoC', 'MQTT', 'rxdart', 'Yandex MapKit'],
+		},
+		{
+			title: 'Job app with a crypto wallet',
+			period: '12.2021 – 08.2022',
+			task: 'Job search with user roles and a built-in crypto wallet.',
+			role: 'Flutter developer — architecture, code review, releases.',
+			solutions: [
+				'Role-based access',
+				'WebSocket chats',
+				'Google Maps',
+				'Wallet on web3dart and WalletConnect',
+			],
+			results: [],
+			tags: ['Flutter', 'MobX', 'WebSocket', 'web3dart'],
+		},
+		{
+			title: 'Fitness app',
+			period: '08.2021 – 11.2021, 09.2022 – 10.2022',
+			task: 'Social features and activity tracking for people who work out.',
+			role: 'Flutter developer — features, UI and animations, releases.',
+			solutions: [
+				'Camera stories with video processing',
+				'Voice messages in chat',
+				'Bluetooth smart scales and health data',
+				'In-app purchases',
+			],
+			results: [],
+			tags: ['Flutter', 'MobX', 'Bluetooth', 'HealthKit/Health Connect'],
+		},
+		{
+			title: 'Wayback',
+			period: '2026',
+			task: 'Get back to a saved spot without an internet connection.',
+			role: 'Author.',
+			solutions: [
+				'Offline-first navigation by GPS and compass',
+				'Clean architecture and Bloc',
+				'Custom design system with a live demo',
+				'Designs in Penpot',
+			],
+			results: [
+				'Open source, live design system demo, APK in releases',
+			],
+			tags: ['Flutter', 'Bloc', 'GPS', 'Penpot'],
+			openSource: true,
+			repoUrl: 'https://github.com/Dogayo/wayback',
+			demoUrl: 'https://dogayo.github.io/wayback',
+			apkUrl: 'https://github.com/Dogayo/wayback/releases/latest',
+			license: 'MIT',
+		},
+	],
+	education: {
+		institution: 'Tomsk College of Information Technologies',
+		program: 'Information Systems and Programming',
+		period: '2018 – 2021',
+		duration: '3 years',
+		disciplines: [
+			'Algorithms and data structures',
+			'Discrete mathematics',
+			'Programming',
+			'Databases, systems analysis and process modeling',
+		],
+		achievements: [
+			'1st place at the regional WorldSkills championship, Mobile Applications Development (2020)',
+			'Hands-on mobile development projects',
+		],
+	},
+	selfEducation: {
+		title: 'Self-study in mobile development',
+		period: '2019 – present',
+		description: 'Continuously learning new technologies, frameworks and mobile development best practices',
+	},
+	courses: [
+		'Internship in Mobile Applications Development — 2019, mentored by E. P. Sabitov, director of Hakta and WorldSkills expert',
+		'Tomsk School of Programmers, Application Development course — 2017',
+		'Tomsk School of Programmers, Programming Basics course — 2016',
+	],
+	skills: [
+		{
+			title: 'Programming languages',
+			items: ru.skills[0].items,
+		},
+		{
+			title: 'Mobile development',
+			items: ru.skills[1].items,
+		},
+		{
+			title: 'Tools and DevOps',
+			items: [
+				{ name: 'Git', level: 'expert' },
+				{ name: 'CI/CD', level: 'intermediate' },
+				{ name: 'Deployment', level: 'intermediate' },
+				{ name: 'Mason' },
+				{ name: 'Figma' },
+				{ name: 'Penpot' },
+			],
+		},
+		{
+			title: 'Focus areas',
+			items: [
+				{ name: 'Fintech and crypto' },
+				{ name: 'Web3 integrations' },
+				{ name: 'App architecture' },
+				{ name: 'Design systems and UI/UX' },
+				{ name: 'Performance optimization' },
+				{ name: 'Security' },
+				{ name: 'Code review and task planning' },
+			],
+		},
+	],
+	titles: {
+		about: 'About',
+		experience: 'Experience',
+		lastPosition: 'Latest position',
+		earlyCareer: 'Early career',
+		projects: 'Projects',
+		education: 'Education',
+		disciplines: 'Key subjects',
+		achievements: 'Achievements',
+		selfEducation: 'Further education',
+		courses: 'Courses and certifications',
+		skills: 'Skills',
+		contacts: 'Contacts',
+		task: 'Task',
+		role: 'Role',
+		solutions: 'Solutions',
+		results: 'Result',
+	},
+	ui: {
+		nav: {
+			experience: 'experience',
+			projects: 'projects',
+			skills: 'skills',
+			contacts: 'contacts',
+		},
+		navLabel: 'Sections',
+		theme: {
+			label: 'Theme',
+			light: 'light',
+			dark: 'dark',
+		},
+		language: 'Language',
+		downloadResume: 'Download resume',
+		stack: 'Stack',
+		apk: 'APK in releases',
+		demo: 'Design system demo',
+		levels: {
+			expert: 'expert',
+			intermediate: 'working level',
+			basic: 'basic',
+		},
+	},
 };
 
 export const defaultLocale: Locale = 'ru';
 
-export const profiles = { ru } satisfies Record<Locale, Profile>;
+export const profiles = { ru, en } satisfies Record<Locale, Profile>;
 
-export const profile: Profile = profiles[defaultLocale];
+/** Адрес страницы для каждой локали; русская версия в корне. */
+export const localePaths: Record<Locale, string> = {
+	ru: '/',
+	en: '/en/',
+};

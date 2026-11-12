@@ -3,9 +3,13 @@ import { onMounted, ref } from 'vue';
 
 type Theme = 'light' | 'dark';
 
+const props = defineProps<{
+	labels: { label: string; light: string; dark: string };
+}>();
+
 const options: { value: Theme; label: string }[] = [
-	{ value: 'light', label: 'светлая' },
-	{ value: 'dark', label: 'тёмная' },
+	{ value: 'light', label: props.labels.light },
+	{ value: 'dark', label: props.labels.dark },
 ];
 
 // Начальная тема уже выставлена скриптом в <head>; подсветка кнопок идёт через CSS,
@@ -28,7 +32,7 @@ function select(theme: Theme) {
 </script>
 
 <template>
-	<div role="group" aria-label="Тема" class="flex items-center gap-0.5 rounded-full border border-border bg-surface-2 p-[3px]">
+	<div role="group" :aria-label="labels.label" class="flex items-center gap-0.5 rounded-full border border-border bg-surface-2 p-[3px]">
 		<button
 			v-for="option in options"
 			:key="option.value"
