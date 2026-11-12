@@ -48,6 +48,13 @@
 	--on-accent: #0a0c0b;
 }
 
+/* Плавный переход по якорям меню; при «уменьшить движение» — мгновенный. */
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
 @theme inline {
 	--color-bg: var(--bg);
 	--color-surface: var(--surface);
