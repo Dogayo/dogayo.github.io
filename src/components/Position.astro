@@ -1,0 +1,27 @@
+---
+import type { Position } from '../data/profile';
+
+interface Props {
+	position: Position;
+}
+
+const { position } = Astro.props;
+---
+
+<article class="flex flex-col gap-3">
+	<header class="flex flex-col gap-1.5">
+		<div>
+			<h3 class="text-h3 font-semibold">{position.title}</h3>
+			<p class="text-small text-accent">{position.organization}</p>
+		</div>
+		<p class="font-mono text-mono-s text-muted">{position.period} · {position.duration}</p>
+	</header>
+	<ul class="flex flex-col gap-1.5">
+		{position.responsibilities.map((item) => (
+			<li class="flex gap-2 text-small">
+				<span class="font-mono text-muted" aria-hidden="true">—</span>
+				<span>{item}</span>
+			</li>
+		))}
+	</ul>
+</article>

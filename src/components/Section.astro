@@ -1,0 +1,16 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+	id: string;
+	index: string;
+	title: string;
+}
+
+const { id, index, title } = Astro.props;
+---
+
+<section id={id} class="mx-auto flex max-w-[1072px] scroll-mt-6 flex-col gap-6 px-4 pt-16 md:gap-8 md:pt-24">
+	<SectionHeader index={index} title={title} />
+	<slot />
+</section>

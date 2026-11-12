@@ -1,0 +1,53 @@
+---
+import type { Project, SectionTitles } from '../data/profile';
+
+interface Props {
+	project: Project;
+	titles: SectionTitles;
+}
+
+const { project, titles } = Astro.props;
+const label = 'text-caption font-medium uppercase text-muted';
+---
+
+<article class="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6">
+	<header class="flex flex-col gap-1">
+		<p class="font-mono text-mono-s text-muted">{project.period}</p>
+		<h3 class="text-h3 font-semibold">{project.title}</h3>
+	</header>
+
+	<div class="flex flex-col gap-1">
+		<p class={label}>{titles.task}</p>
+		<p class="text-small">{project.task}</p>
+	</div>
+
+	<div class="flex flex-col gap-1">
+		<p class={label}>{titles.role}</p>
+		<p class="text-small">{project.role}</p>
+	</div>
+
+	<div class="flex flex-col gap-1">
+		<p class={label}>{titles.solutions}</p>
+		<ul class="flex flex-col gap-1">
+			{project.solutions.map((item) => (
+				<li class="flex gap-2 text-small">
+					<span class="font-mono text-accent" aria-hidden="true">→</span>
+					<span>{item}</span>
+				</li>
+			))}
+		</ul>
+	</div>
+
+	{project.results.length > 0 && (
+		<div class="flex flex-col gap-1 rounded-[10px] bg-accent-soft px-4 py-3">
+			<p class="text-caption font-medium uppercase text-accent">{titles.results}</p>
+			{project.results.map((item) => <p class="text-small font-medium">{item}</p>)}
+		</div>
+	)}
+
+	<ul class="mt-auto flex flex-wrap gap-1.5" aria-label="Стек">
+		{project.tags.map((tag) => (
+			<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
+		))}
+	</ul>
+</article>
