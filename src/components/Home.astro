@@ -46,7 +46,7 @@ const openSource = profile.projects.filter((project) => project.openSource);
 		</Section>
 
 		<Section id="projects" index="03" title={titles.projects}>
-			<div class="grid gap-6 md:grid-cols-2" data-stagger>
+			<div class="flex flex-col gap-6" data-stagger>
 				{projects.map((project) => <ProjectCard project={project} profile={profile} />)}
 			</div>
 		</Section>

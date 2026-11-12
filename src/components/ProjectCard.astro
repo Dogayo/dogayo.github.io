@@ -1,5 +1,6 @@
 ---
 import type { Profile, Project } from '../data/profile';
+import PhoneScreen from './PhoneScreen.astro';
 
 interface Props {
 	project: Project;
@@ -11,44 +12,48 @@ const { titles, ui } = profile;
 const label = 'text-caption font-medium uppercase text-muted';
 ---
 
-<article class="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 transition duration-200 hover:-translate-y-0.5 hover:border-accent/50">
-	<header class="flex flex-col gap-1">
-		<p class="font-mono text-mono-s text-muted">{project.period}</p>
-		<h3 class="text-h3 font-semibold">{project.title}</h3>
-	</header>
+<article class="flex flex-col gap-6 rounded-2xl border border-border bg-surface p-6 transition duration-200 hover:-translate-y-0.5 hover:border-accent/50 sm:flex-row sm:justify-between">
+	<div class="flex max-w-[680px] min-w-0 flex-1 flex-col gap-4">
+		<header class="flex flex-col gap-1">
+			<p class="font-mono text-mono-s text-muted">{project.period}</p>
+			<h3 class="text-h3 font-semibold">{project.title}</h3>
+		</header>
 
-	<div class="flex flex-col gap-1">
-		<p class={label}>{titles.task}</p>
-		<p class="text-small">{project.task}</p>
-	</div>
+		<div class="flex flex-col gap-1">
+			<p class={label}>{titles.task}</p>
+			<p class="text-small">{project.task}</p>
+		</div>
 
-	<div class="flex flex-col gap-1">
-		<p class={label}>{titles.role}</p>
-		<p class="text-small">{project.role}</p>
-	</div>
+		<div class="flex flex-col gap-1">
+			<p class={label}>{titles.role}</p>
+			<p class="text-small">{project.role}</p>
+		</div>
 
-	<div class="flex flex-col gap-1">
-		<p class={label}>{titles.solutions}</p>
-		<ul class="flex flex-col gap-1">
-			{project.solutions.map((item) => (
-				<li class="flex gap-2 text-small">
-					<span class="font-mono text-accent" aria-hidden="true">→</span>
-					<span>{item}</span>
-				</li>
+		<div class="flex flex-col gap-1">
+			<p class={label}>{titles.solutions}</p>
+			<ul class="flex flex-col gap-1">
+				{project.solutions.map((item) => (
+					<li class="flex gap-2 text-small">
+						<span class="font-mono text-accent" aria-hidden="true">→</span>
+						<span>{item}</span>
+					</li>
+				))}
+			</ul>
+		</div>
+
+		{project.results.length > 0 && (
+			<div class="flex flex-col gap-1 rounded-[10px] bg-accent-soft px-4 py-3">
+				<p class="text-caption font-medium uppercase text-accent">{titles.results}</p>
+				{project.results.map((item) => <p class="text-small font-medium">{item}</p>)}
+			</div>
+		)}
+
+		<ul class="mt-auto flex flex-wrap gap-1.5" aria-label={ui.stack}>
+			{project.tags.map((tag) => (
+				<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
 			))}
 		</ul>
 	</div>
 
-	{project.results.length > 0 && (
-		<div class="flex flex-col gap-1 rounded-[10px] bg-accent-soft px-4 py-3">
-			<p class="text-caption font-medium uppercase text-accent">{titles.results}</p>
-			{project.results.map((item) => <p class="text-small font-medium">{item}</p>)}
-		</div>
-	)}
-
-	<ul class="mt-auto flex flex-wrap gap-1.5" aria-label={ui.stack}>
-		{project.tags.map((tag) => (
-			<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
-		))}
-	</ul>
+	{project.screen && <PhoneScreen screen={project.screen} class="order-first self-start sm:order-none" />}
 </article>

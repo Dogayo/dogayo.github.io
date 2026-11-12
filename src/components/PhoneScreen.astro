@@ -1,0 +1,28 @@
+---
+import { Picture } from 'astro:assets';
+import type { Props as PictureProps } from 'astro/components/Picture.astro';
+import type { ProjectScreen } from '../data/profile';
+import ProjectSketch from './ProjectSketch.astro';
+
+interface Props {
+	screen: ProjectScreen;
+	class?: string;
+}
+
+const { screen, class: className } = Astro.props;
+// Скриншот отдаётся в 1x и 2x под ширину экрана в рамке.
+const picture = { formats: ['avif', 'webp'], widths: [164, 328], sizes: '(min-width: 640px) 164px, 120px', class: 'size-full object-cover' } satisfies Partial<PictureProps>;
+---
+
+<figure class:list={['w-32 shrink-0 rounded-[22px] border border-border bg-surface-2 p-1 sm:w-44 sm:rounded-[28px] sm:p-1.5', className]}>
+	<div class="aspect-[9/20] overflow-hidden rounded-[18px] bg-bg sm:rounded-[22px]">
+		{'sketch' in screen ? (
+			<ProjectSketch sketch={screen.sketch} label={screen.alt} />
+		) : (
+			<>
+				<Picture src={screen.light} alt={screen.alt} {...picture} pictureAttributes={{ class: 'dark:hidden' }} />
+				<Picture src={screen.dark} alt={screen.alt} {...picture} pictureAttributes={{ class: 'hidden dark:block' }} />
+			</>
+		)}
+	</div>
+</figure>
