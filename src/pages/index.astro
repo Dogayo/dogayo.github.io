@@ -1,13 +1,37 @@
 ---
 import Hero from '../components/Hero.astro';
+import Position from '../components/Position.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Section from '../components/Section.astro';
 import TopBar from '../components/TopBar.astro';
 import Layout from '../layouts/Layout.astro';
 import { profile } from '../data/profile';
+
+const { titles } = profile;
+// Open-source проекты выводятся отдельным блоком.
+const projects = profile.projects.filter((project) => !project.openSource);
 ---
 
 <Layout title={`${profile.fullName} — ${profile.role}`}>
 	<TopBar />
 	<main>
 		<Hero />
+
+		<Section id="about" index="01" title={titles.about}>
+			<p class="max-w-[720px] text-body">{profile.about}</p>
+		</Section>
+
+		<Section id="experience" index="02" title={titles.experience}>
+			<div class="flex flex-col gap-10">
+				<Position position={profile.experience.lastPosition} />
+				<Position position={profile.experience.earlyCareer} />
+			</div>
+		</Section>
+
+		<Section id="projects" index="03" title={titles.projects}>
+			<div class="grid gap-6 md:grid-cols-2">
+				{projects.map((project) => <ProjectCard project={project} titles={titles} />)}
+			</div>
+		</Section>
 	</main>
 </Layout>
