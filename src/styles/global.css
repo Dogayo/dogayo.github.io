@@ -1,1 +1,64 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Тёмная тема: явный выбор через data-theme на <html>, иначе — системная настройка. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Палитра «Терминал». Контраст по WCAG 2.1 к фону bg:
+   light — text 17.7, muted 7.5, accent 5.1; dark — text 16.6, muted 7.7, accent 11.1. */
+:root {
+	color-scheme: light;
+	--bg: #fafaf7;
+	--surface: #ffffff;
+	--surface-2: #f1f3f0;
+	--border: #dce2dd;
+	--text: #111412;
+	--muted: #4b544e;
+	--accent: #0b7a50;
+	--accent-soft: #e3f3eb;
+	--on-accent: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		color-scheme: dark;
+		--bg: #0a0c0b;
+		--surface: #121513;
+		--surface-2: #1a1e1b;
+		--border: #262b28;
+		--text: #e8ede9;
+		--muted: #9aa59e;
+		--accent: #3ddc97;
+		--accent-soft: #10261c;
+		--on-accent: #0a0c0b;
+	}
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+	--bg: #0a0c0b;
+	--surface: #121513;
+	--surface-2: #1a1e1b;
+	--border: #262b28;
+	--text: #e8ede9;
+	--muted: #9aa59e;
+	--accent: #3ddc97;
+	--accent-soft: #10261c;
+	--on-accent: #0a0c0b;
+}
+
+@theme inline {
+	--color-bg: var(--bg);
+	--color-surface: var(--surface);
+	--color-surface-2: var(--surface-2);
+	--color-border: var(--border);
+	--color-text: var(--text);
+	--color-muted: var(--muted);
+	--color-accent: var(--accent);
+	--color-accent-soft: var(--accent-soft);
+	--color-on-accent: var(--on-accent);
+
+	--font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+}
