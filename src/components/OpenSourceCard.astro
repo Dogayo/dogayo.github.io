@@ -1,5 +1,6 @@
 ---
 import type { Profile, Project } from '../data/profile';
+import PhoneScreen from './PhoneScreen.astro';
 
 interface Props {
 	project: Project;
@@ -16,43 +17,47 @@ const links = [
 ].filter((link): link is { href: string; label: string } => Boolean(link.href && link.label));
 ---
 
-<article class="flex flex-col gap-5 rounded-2xl border border-accent bg-surface p-5 transition duration-200 hover:-translate-y-0.5 md:p-8">
-	<header class="flex flex-wrap items-center gap-3">
-		<h3 class="text-h2 font-bold">{project.title}</h3>
-		<span class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">open source</span>
-		{project.license && (
-			<span class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{project.license}</span>
-		)}
-		<span class="font-mono text-mono-s text-muted">{project.period}</span>
-	</header>
+<article class="flex flex-col gap-6 rounded-2xl border border-accent bg-surface p-5 transition duration-200 hover:-translate-y-0.5 sm:flex-row sm:justify-between md:p-8">
+	<div class="flex min-w-0 flex-1 flex-col gap-5">
+		<header class="flex flex-wrap items-center gap-3">
+			<h3 class="text-h2 font-bold">{project.title}</h3>
+			<span class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">open source</span>
+			{project.license && (
+				<span class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{project.license}</span>
+			)}
+			<span class="font-mono text-mono-s text-muted">{project.period}</span>
+		</header>
 
-	<p class="max-w-[760px] text-body">{project.task}</p>
+		<p class="max-w-[760px] text-body">{project.task}</p>
 
-	<div class="flex flex-col gap-1">
-		<p class="text-caption font-medium uppercase text-muted">{titles.solutions}</p>
-		<ul class="grid gap-1 md:grid-cols-2 md:gap-x-8">
-			{project.solutions.map((item) => (
-				<li class="flex gap-2 text-small">
-					<span class="font-mono text-accent" aria-hidden="true">→</span>
-					<span>{item}</span>
+		<div class="flex flex-col gap-1">
+			<p class="text-caption font-medium uppercase text-muted">{titles.solutions}</p>
+			<ul class="grid gap-1 md:grid-cols-2 md:gap-x-8">
+				{project.solutions.map((item) => (
+					<li class="flex gap-2 text-small">
+						<span class="font-mono text-accent" aria-hidden="true">→</span>
+						<span>{item}</span>
+					</li>
+				))}
+			</ul>
+		</div>
+
+		<ul class="flex flex-wrap gap-1.5" aria-label={ui.stack}>
+			{project.tags.map((tag) => (
+				<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
+			))}
+		</ul>
+
+		<ul class="flex flex-col gap-1 border-t border-border pt-4 md:flex-row md:gap-8">
+			{links.map((link) => (
+				<li>
+					<a href={link.href} class="group inline-flex gap-2 py-2 font-mono text-mono text-text transition-colors hover:text-accent">
+						{link.label} <span class="inline-block transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-accent" aria-hidden="true">↗</span>
+					</a>
 				</li>
 			))}
 		</ul>
 	</div>
 
-	<ul class="flex flex-wrap gap-1.5" aria-label={ui.stack}>
-		{project.tags.map((tag) => (
-			<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
-		))}
-	</ul>
-
-	<ul class="flex flex-col gap-1 border-t border-border pt-4 md:flex-row md:gap-8">
-		{links.map((link) => (
-			<li>
-				<a href={link.href} class="group inline-flex gap-2 py-2 font-mono text-mono text-text transition-colors hover:text-accent">
-					{link.label} <span class="inline-block transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-accent" aria-hidden="true">↗</span>
-				</a>
-			</li>
-		))}
-	</ul>
+	{project.screen && <PhoneScreen screen={project.screen} class="order-first self-start sm:order-none" />}
 </article>

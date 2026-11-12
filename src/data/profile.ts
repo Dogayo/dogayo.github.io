@@ -1,4 +1,9 @@
+import type { ImageMetadata } from 'astro';
 import type { AgeWords, Born } from '../lib/age';
+import waybackEnDark from '../assets/screens/wayback-en-dark.png';
+import waybackEn from '../assets/screens/wayback-en.png';
+import waybackRuDark from '../assets/screens/wayback-ru-dark.png';
+import waybackRu from '../assets/screens/wayback-ru.png';
 
 // Весь текст сайта. Разметка только читает эти данные, при сборке они превращаются в HTML.
 // Чтобы добавить язык, расширьте Locale, добавьте объект в profiles и путь в localePaths: TypeScript потребует все поля.
@@ -36,6 +41,14 @@ export interface Position {
 	responsibilities: string[];
 }
 
+/** Схемы экранов коммерческих проектов в ProjectSketch.astro. */
+export type SketchId = 'exchange' | 'neobank' | 'sports' | 'car' | 'jobs' | 'fitness';
+
+/** Ключевой экран в рамке телефона: схема без брендов (NDA) или настоящий скриншот open-source проекта. */
+export type ProjectScreen =
+	| { sketch: SketchId; alt: string }
+	| { light: ImageMetadata; dark: ImageMetadata; alt: string };
+
 export interface Project {
 	title: string;
 	period: string;
@@ -51,6 +64,7 @@ export interface Project {
 	/** Последний релиз со сборкой APK. */
 	apkUrl?: string;
 	license?: string;
+	screen?: ProjectScreen;
 }
 
 export interface Education {
@@ -232,6 +246,10 @@ const ru: Profile = {
 				'Графики и стакан держат 60+ FPS при потоке котировок',
 			],
 			tags: ['Flutter', 'BLoC', 'WebSocket', 'decimal', 'Firebase'],
+			screen: {
+				sketch: 'exchange',
+				alt: 'Схема торгового экрана биржи: торговая пара и цена, панель инструментов графика, свечной график с объёмами и шкалой цен, вкладки ордеров',
+			},
 		},
 		{
 			title: 'Финтех-платформа (необанк)',
@@ -246,6 +264,10 @@ const ru: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'BLoC', 'Centrifugo', 'protobuf', 'WalletConnect'],
+			screen: {
+				sketch: 'neobank',
+				alt: 'Схема главного экрана необанка: балансы криптоактивов, карусель избранных монет, история операций и плавающая навигация',
+			},
 		},
 		{
 			title: 'Спортивное приложение для прогнозов',
@@ -261,6 +283,10 @@ const ru: Profile = {
 				'50K+ установок и 4,2★ в Google Play',
 			],
 			tags: ['Flutter', 'BLoC', 'Firebase', 'In-app purchases'],
+			screen: {
+				sketch: 'sports',
+				alt: 'Схема таблицы лидеров: выбор этапа и сезона, вкладки игроков и лиг, поиск, пьедестал из трёх призёров и список участников',
+			},
 		},
 		{
 			title: 'Приложение для автомобиля',
@@ -275,6 +301,10 @@ const ru: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'BLoC', 'MQTT', 'rxdart', 'Yandex MapKit'],
+			screen: {
+				sketch: 'car',
+				alt: 'Схема главного экрана приложения для автомобиля: статус и силуэт машины, запас хода и заряд, плитки замка, дверей, климата, света и других функций',
+			},
 		},
 		{
 			title: 'Job-приложение с криптокошельком',
@@ -289,6 +319,10 @@ const ru: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'MobX', 'WebSocket', 'web3dart'],
+			screen: {
+				sketch: 'jobs',
+				alt: 'Схема ленты заказов: поиск, карточки с заказчиком, адресом, типом и оплатой, кнопка карты и нижняя навигация',
+			},
 		},
 		{
 			title: 'Фитнес-приложение',
@@ -303,6 +337,10 @@ const ru: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'MobX', 'Bluetooth', 'HealthKit/Health Connect'],
+			screen: {
+				sketch: 'fitness',
+				alt: 'Схема дневника питания: калории за день, белки, жиры и углеводы, приёмы пищи, кнопки взвешивания и консультации',
+			},
 		},
 		{
 			title: 'Wayback',
@@ -324,6 +362,11 @@ const ru: Profile = {
 			demoUrl: 'https://dogayo.github.io/wayback',
 			apkUrl: 'https://github.com/Dogayo/wayback/releases/latest',
 			license: 'MIT',
+			screen: {
+				light: waybackRu,
+				dark: waybackRuDark,
+				alt: 'Экран навигации Wayback: стрелка в круге компаса указывает на точку «Машина», под ней расстояние 645 м и точность ±5 м',
+			},
 		},
 	],
 	education: {
@@ -531,6 +574,10 @@ const en: Profile = {
 				'Charts and order book hold 60+ FPS under a live quote stream',
 			],
 			tags: ['Flutter', 'BLoC', 'WebSocket', 'decimal', 'Firebase'],
+			screen: {
+				sketch: 'exchange',
+				alt: 'Exchange trading screen sketch: trading pair and price, chart toolbar, candlestick chart with volume and price scale, order tabs',
+			},
 		},
 		{
 			title: 'Fintech platform (neobank)',
@@ -545,6 +592,10 @@ const en: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'BLoC', 'Centrifugo', 'protobuf', 'WalletConnect'],
+			screen: {
+				sketch: 'neobank',
+				alt: 'Neobank home sketch: crypto asset balances, a watchlist carousel, transaction history and floating navigation',
+			},
 		},
 		{
 			title: 'Sports prediction app',
@@ -560,6 +611,10 @@ const en: Profile = {
 				'50K+ installs and 4.2★ on Google Play',
 			],
 			tags: ['Flutter', 'BLoC', 'Firebase', 'In-app purchases'],
+			screen: {
+				sketch: 'sports',
+				alt: 'Leaderboard sketch: event and season pickers, players and leagues tabs, search, a three-place podium and the list of participants',
+			},
 		},
 		{
 			title: 'Connected car app',
@@ -574,6 +629,10 @@ const en: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'BLoC', 'MQTT', 'rxdart', 'Yandex MapKit'],
+			screen: {
+				sketch: 'car',
+				alt: 'Connected car home sketch: status and car silhouette, range and charge, tiles for the lock, doors, climate, lights and other controls',
+			},
 		},
 		{
 			title: 'Job app with a crypto wallet',
@@ -588,6 +647,10 @@ const en: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'MobX', 'WebSocket', 'web3dart'],
+			screen: {
+				sketch: 'jobs',
+				alt: 'Job feed sketch: search, cards with the employer, address, type and payment, a map button and bottom navigation',
+			},
 		},
 		{
 			title: 'Fitness app',
@@ -602,6 +665,10 @@ const en: Profile = {
 			],
 			results: [],
 			tags: ['Flutter', 'MobX', 'Bluetooth', 'HealthKit/Health Connect'],
+			screen: {
+				sketch: 'fitness',
+				alt: 'Food diary sketch: daily calories, protein, fat and carbs, meals, and buttons for weighing and a consultation',
+			},
 		},
 		{
 			title: 'Wayback',
@@ -623,6 +690,11 @@ const en: Profile = {
 			demoUrl: 'https://dogayo.github.io/wayback',
 			apkUrl: 'https://github.com/Dogayo/wayback/releases/latest',
 			license: 'MIT',
+			screen: {
+				light: waybackEn,
+				dark: waybackEnDark,
+				alt: 'Wayback navigation screen: an arrow inside a compass ring points to the saved “Car” point, with the distance of 645 m and ±5 m accuracy below',
+			},
 		},
 	],
 	education: {

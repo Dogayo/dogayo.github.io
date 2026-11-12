@@ -1,0 +1,390 @@
+---
+import type { SketchId } from '../data/profile';
+
+interface Props {
+	sketch: SketchId;
+	label: string;
+}
+
+// Схема экрана вместо скриншота (NDA): только плашки и фигуры в цветах темы, без логотипов, текстов и фирменных цветов.
+// Холст 180×400 — пропорции экрана телефона 9:20. Плашки text — заголовки и цифры, muted — подписи, accent — акценты и кнопки.
+const { sketch, label } = Astro.props;
+
+// Свечи биржи в координатах холста: открытие, закрытие, максимум, минимум, объём. Рост — закрытие выше (y меньше).
+const candles = [
+	[190, 182, 178, 196, 10], [182, 170, 166, 186, 14], [170, 176, 165, 180, 8], [176, 160, 152, 178, 18],
+	[160, 150, 146, 166, 12], [150, 158, 144, 162, 9], [158, 166, 155, 170, 11], [166, 156, 150, 170, 15],
+	[156, 146, 140, 160, 13], [146, 152, 142, 158, 7], [152, 140, 136, 156, 16], [140, 148, 134, 152, 10],
+	[148, 144, 140, 152, 6],
+].map(([open, close, high, low, volume], i) => ({ x: 14 + i * 10, open, close, high, low, volume, up: close < open }));
+---
+
+<svg viewBox="0 0 180 400" role="img" aria-label={label} class="size-full">
+	<g class="fill-muted/40">
+		<rect x="12" y="10" width="20" height="5" rx="2.5" />
+		<rect x="148" y="10" width="20" height="5" rx="2.5" />
+	</g>
+
+	{sketch === 'exchange' && (
+		<g>
+			<!-- Спот / фьючерсы и переключатель режима -->
+			<rect x="12" y="27" width="20" height="5" rx="2" class="fill-text" />
+			<rect x="12" y="37" width="20" height="2" rx="1" class="fill-accent" />
+			<rect x="38" y="27" width="26" height="5" rx="2" class="fill-muted/40" />
+			<rect x="118" y="28" width="26" height="4" rx="2" class="fill-muted/40" />
+			<rect x="150" y="25" width="20" height="10" rx="5" class="fill-accent" />
+			<circle cx="165" cy="30" r="3.5" class="fill-on-accent" />
+			<path d="M0 46h180" class="stroke-border" />
+
+			<!-- График / торговля -->
+			<rect x="12.5" y="52.5" width="75" height="14" rx="7" class="fill-none stroke-accent" />
+			<rect x="38" y="57.5" width="24" height="4" rx="2" class="fill-text/70" />
+			<rect x="92.5" y="52.5" width="75" height="14" rx="7" class="fill-none stroke-border" />
+			<rect x="118" y="57.5" width="24" height="4" rx="2" class="fill-muted/40" />
+
+			<!-- Пара, изменение и цена -->
+			<rect x="12" y="80" width="40" height="7" rx="2" class="fill-text" />
+			<path d="M56 82l3 3 3-3" class="fill-none stroke-text/70" stroke-width="1.2" />
+			<rect x="76" y="80" width="22" height="7" rx="3" class="fill-surface-2" />
+			<rect x="132" y="79" width="36" height="5" rx="2" class="fill-text/70" />
+			<rect x="140" y="87" width="28" height="3" rx="1.5" class="fill-muted/40" />
+
+			<!-- Панель инструментов графика -->
+			<path d="M0 100h180M0 118h180" class="stroke-border" />
+			<g class="fill-muted/40">
+				{[14, 36, 58, 80, 102, 124, 146, 164].map((x) => <rect x={x - 4} y="105" width="8" height="8" rx="2" />)}
+			</g>
+
+			<!-- Свечной график, объёмы и шкала цен -->
+			<rect x="8" y="124" width="48" height="4" rx="2" class="fill-text/70" />
+			<rect x="8" y="131" width="40" height="3" rx="1.5" class="fill-accent" />
+			<g class="fill-muted/40">
+				{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect x="150" y={128 + i * 18} width="22" height="3" rx="1.5" />)}
+			</g>
+			{candles.map(({ x, open, close, high, low, volume, up }) => (
+				<g>
+					<rect x={x - 3} y={258 - volume} width="6" height={volume} class={up ? 'fill-accent/30' : 'fill-muted/25'} />
+					<path d={`M${x} ${high}V${low}`} class={up ? 'stroke-accent' : 'stroke-muted/70'} />
+					{up ? (
+						<rect x={x - 3} y={close} width="6" height={open - close} class="fill-accent" />
+					) : (
+						<rect x={x - 2.5} y={open + 0.5} width="5" height={close - open - 1} class="fill-surface stroke-muted/70" />
+					)}
+				</g>
+			))}
+			<path d="M8 144h138" class="stroke-accent" stroke-dasharray="2 2" />
+			<rect x="146" y="140" width="26" height="8" rx="2" class="fill-accent" />
+			<rect x="150" y="142.5" width="18" height="3" rx="1.5" class="fill-on-accent/80" />
+			<g class="fill-muted/40">
+				{[24, 60, 96, 132].map((x) => <rect x={x - 8} y="266" width="16" height="3" rx="1.5" />)}
+			</g>
+
+			<!-- Вкладки ордеров и пустое состояние -->
+			<path d="M0 278h180" class="stroke-border" />
+			<rect x="12" y="288" width="34" height="4" rx="2" class="fill-text/70" />
+			<rect x="12" y="296" width="34" height="1.5" rx="0.75" class="fill-text/70" />
+			<rect x="56" y="288" width="34" height="4" rx="2" class="fill-muted/40" />
+			<rect x="100" y="288" width="34" height="4" rx="2" class="fill-muted/40" />
+			<rect x="50" y="324" width="80" height="5" rx="2" class="fill-text/70" />
+
+			<!-- Нижняя навигация, активна торговля -->
+			<path d="M0 352h180" class="stroke-border" />
+			{[24, 57, 90, 123, 156].map((x, i) => (
+				<g class={i === 0 ? 'fill-accent' : 'fill-muted/40'}>
+					<rect x={x - 6} y="360" width="12" height="12" rx="3" />
+					<rect x={x - 9} y="376" width="18" height="3" rx="1.5" />
+				</g>
+			))}
+		</g>
+	)}
+
+	{sketch === 'neobank' && (
+		<g>
+			<!-- Шапка: профиль и уведомления -->
+			<circle cx="20" cy="32" r="7" class="fill-muted/40" />
+			<rect x="31" y="29" width="32" height="6" rx="2" class="fill-text" />
+			<circle cx="164" cy="32" r="7" class="fill-none stroke-border" stroke-width="1.5" />
+			<rect x="161" y="30" width="6" height="5" rx="2" class="fill-muted/60" />
+
+			<!-- Балансы активов -->
+			<rect x="8" y="48" width="164" height="62" rx="8" class="fill-surface-2" />
+			{[58, 84].map((y) => (
+				<g>
+					<circle cx="25" cy={y + 8} r="8" class="fill-muted/40" />
+					<rect x="38" y={y + 2} width="18" height="5" rx="2" class="fill-text/70" />
+					<rect x="60" y={y + 2} width="20" height="5" rx="2.5" class="fill-border" />
+					<rect x="38" y={y + 11} width="32" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x="126" y={y + 2} width="38" height="5" rx="2" class="fill-text/70" />
+					<rect x="144" y={y + 11} width="20" height="3" rx="1.5" class="fill-muted/40" />
+				</g>
+			))}
+
+			<!-- Избранное: карусель монет -->
+			<rect x="8" y="122" width="46" height="6" rx="2" class="fill-text" />
+			<rect x="144" y="123" width="24" height="4" rx="2" class="fill-muted/40" />
+			{[8, 70, 132].map((x) => (
+				<g>
+					<rect x={x} y="136" width="56" height="56" rx="8" class="fill-surface-2" />
+					<circle cx={x + 13} cy="150" r="7" class="fill-muted/40" />
+					<rect x={x + 6} y="164" width="16" height="4" rx="2" class="fill-text/70" />
+					<rect x={x + 25} y="164" width="18" height="4" rx="2" class="fill-border" />
+					<rect x={x + 6} y="172" width="34" height="5" rx="2" class="fill-text/70" />
+					<rect x={x + 6} y="181" width="14" height="3" rx="1.5" class="fill-muted/40" />
+				</g>
+			))}
+			<rect x="76" y="199" width="12" height="2" rx="1" class="fill-text/70" />
+			<rect x="92" y="199" width="6" height="2" rx="1" class="fill-muted/40" />
+			<rect x="102" y="199" width="6" height="2" rx="1" class="fill-muted/40" />
+
+			<!-- История операций -->
+			<rect x="8" y="212" width="58" height="6" rx="2" class="fill-text" />
+			<rect x="148" y="213" width="20" height="4" rx="2" class="fill-muted/40" />
+			<rect x="8" y="228" width="164" height="86" rx="8" class="fill-surface-2" />
+			<rect x="16" y="238" width="30" height="4" rx="2" class="fill-text/70" />
+			<rect x="8" y="320" width="164" height="60" rx="8" class="fill-surface-2" />
+			<rect x="16" y="330" width="36" height="4" rx="2" class="fill-text/70" />
+			{[250, 282, 342].map((y) => (
+				<g>
+					<rect x="16" y={y} width="16" height="16" rx="4" class="fill-bg" />
+					<path d={`M21 ${y + 11}l6-6m-4 0h4v4`} class="fill-none stroke-text/70" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect x="38" y={y + 3} width="34" height="4" rx="2" class="fill-text/70" />
+					<rect x="38" y={y + 10} width="22" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x="132" y={y + 6} width="32" height="4" rx="2" class="fill-text/70" />
+				</g>
+			))}
+
+			<!-- Плавающая навигация, активен раздел крипты -->
+			<rect x="46" y="356" width="88" height="24" rx="12" class="fill-surface stroke-border" />
+			<circle cx="62" cy="368" r="4" class="fill-none stroke-muted/60" stroke-width="1.5" />
+			<circle cx="80" cy="368" r="4" class="fill-none stroke-muted/60" stroke-width="1.5" />
+			<rect x="92" y="359" width="39" height="18" rx="9" class="fill-accent" />
+			<circle cx="101" cy="368" r="3" class="fill-on-accent/80" />
+			<rect x="107" y="366" width="18" height="4" rx="2" class="fill-on-accent/80" />
+		</g>
+	)}
+
+	{sketch === 'sports' && (
+		<g>
+			<!-- Шапка -->
+			<rect x="60" y="29" width="60" height="7" rx="2" class="fill-text" />
+			<circle cx="166" cy="32" r="4" class="fill-accent" />
+
+			<!-- Этап и сезон -->
+			{[[12, 76], [96, 72]].map(([x, width]) => (
+				<g>
+					<rect x={x} y="50" width={width} height="16" rx="4" class="fill-surface-2" />
+					<rect x={x + 6} y="56" width="30" height="4" rx="2" class="fill-text/70" />
+					<path d={`M${x + width - 12} 56.5l3 3 3-3`} class="fill-none stroke-text/70" stroke-width="1.2" />
+				</g>
+			))}
+
+			<!-- Игроки / лиги и поиск -->
+			<rect x="12" y="74" width="156" height="16" rx="5" class="fill-surface-2" />
+			<rect x="12" y="74" width="78" height="16" rx="5" class="fill-accent" />
+			<rect x="38" y="80" width="26" height="4" rx="2" class="fill-on-accent/80" />
+			<rect x="116" y="80" width="26" height="4" rx="2" class="fill-muted/40" />
+			<rect x="12" y="98" width="156" height="14" rx="4" class="fill-surface-2" />
+			<circle cx="21" cy="104.5" r="2.5" class="fill-none stroke-muted/60" stroke-width="1.2" />
+			<rect x="28" y="103" width="40" height="3" rx="1.5" class="fill-muted/40" />
+
+			<!-- Пьедестал: первое место выше и в акценте -->
+			<rect x="50" y="122" width="80" height="5" rx="2" class="fill-text" />
+			<rect x="12" y="134" width="156" height="114" rx="6" class="fill-surface-2" />
+			{[[18, 158, 186], [118, 164, 192]].map(([x, avatar, top]) => (
+				<g>
+					<rect x={x + 11} y={avatar} width="22" height="22" rx="4" class="fill-muted/40" />
+					<rect x={x} y={top} width="44" height={242 - top} rx="4" class="fill-bg" />
+					<rect x={x + 15} y={top + 8} width="14" height="6" rx="2" class="fill-text/70" />
+					<rect x={x + 8} y={top + 19} width="28" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x={x + 12} y={top + 28} width="20" height="4" rx="2" class="fill-text/70" />
+					<rect x={x + 12} y={top + 37} width="20" height="3" rx="1.5" class="fill-muted/40" />
+				</g>
+			))}
+			<rect x="78" y="142" width="24" height="24" rx="4" class="fill-muted/40" />
+			<rect x="68.5" y="172.5" width="43" height="69" rx="4" class="fill-accent-soft stroke-accent" />
+			<rect x="82" y="181" width="16" height="7" rx="2" class="fill-accent" />
+			<rect x="76" y="194" width="28" height="3" rx="1.5" class="fill-muted/40" />
+			<rect x="80" y="204" width="20" height="5" rx="2" class="fill-text/70" />
+			<rect x="78" y="214" width="24" height="4" rx="2" class="fill-accent" />
+
+			<!-- Остальные участники -->
+			{[256, 278, 300, 322].map((y) => (
+				<g>
+					<rect x="16" y={y + 8} width="8" height="4" rx="2" class="fill-text/70" />
+					<circle cx="36" cy={y + 10} r="5" class="fill-muted/40" />
+					<rect x="46" y={y + 8} width="50" height="4" rx="2" class="fill-text/70" />
+					<rect x="140" y={y + 8} width="28" height="4" rx="2" class="fill-text/70" />
+					<path d={`M12 ${y + 20.5}h156`} class="stroke-border" />
+				</g>
+			))}
+
+			<!-- Нижняя навигация, активны таблицы лидеров -->
+			<rect x="0" y="352" width="180" height="48" class="fill-bg" />
+			<path d="M0 352h180" class="stroke-border" />
+			{[24, 57, 90, 123, 156].map((x, i) => (
+				<g class={i === 1 ? 'fill-accent' : 'fill-muted/40'}>
+					<rect x={x - 6} y="360" width="12" height="12" rx="3" />
+					<rect x={x - 9} y="376" width="18" height="3" rx="1.5" />
+				</g>
+			))}
+		</g>
+	)}
+
+	{sketch === 'car' && (
+		<g>
+			<!-- Статус и модель -->
+			<rect x="12" y="28" width="40" height="7" rx="2" class="fill-text" />
+			<rect x="128" y="30" width="40" height="4" rx="2" class="fill-muted/40" />
+
+			<!-- Обобщённый силуэт машины на подсвеченной платформе -->
+			<circle cx="90" cy="104" r="42" class="fill-accent/10" />
+			<ellipse cx="90" cy="128" rx="70" ry="7" class="fill-accent/15 stroke-accent" stroke-width="2" />
+			<path d="M30 114c0-7 5-11 12-12l20-4 16-12h34l16 12h10c8 0 12 5 12 12v8H30z" class="fill-muted/40" />
+			<path d="M66 98l14-9h12v9zM96 89h14l12 9H96z" class="fill-bg" />
+			{[56, 124].map((cx) => (
+				<g>
+					<circle cx={cx} cy="118" r="8" class="fill-text/70" />
+					<circle cx={cx} cy="118" r="3" class="fill-bg" />
+				</g>
+			))}
+
+			<!-- Запас хода, заряд, расход -->
+			<rect x="12" y="148" width="26" height="5" rx="2" class="fill-text/70" />
+			<rect x="76" y="146" width="28" height="8" rx="2" class="fill-accent" />
+			<rect x="136" y="148" width="32" height="5" rx="2" class="fill-text/70" />
+
+			<!-- Плитки управления: замок включён, остальные функции приглушены -->
+			{[[12, 166], [52, 166], [92, 166], [132, 166], [92, 210], [132, 210], [92, 254], [132, 254]].map(([x, y], i) => (
+				<g>
+					<rect x={x} y={y} width="36" height="40" rx="5" class="fill-surface-2" />
+					{i > 0 && <rect x={x + 12} y={y + 16} width="12" height="9" rx="2" class="fill-muted/40" />}
+				</g>
+			))}
+			<rect x="25" y="186" width="10" height="8" rx="1.5" class="fill-text" />
+			<path d="M27 186v-3a3 3 0 0 1 6 0v3" class="fill-none stroke-text" stroke-width="1.5" />
+
+			<!-- Климат: обдув, подогрев, температура внутри и снаружи -->
+			<rect x="12" y="210" width="76" height="84" rx="5" class="fill-surface-2" />
+			<circle cx="27" cy="226" r="6" class="fill-none stroke-muted/60" stroke-width="1.5" />
+			<path d="M42 221c-2 3 2 7 0 10M47 221c-2 3 2 7 0 10M52 221c-2 3 2 7 0 10" class="fill-none stroke-muted/60" stroke-width="1.5" stroke-linecap="round" />
+			<rect x="21" y="264" width="22" height="3" rx="1.5" class="fill-muted/40" />
+			<rect x="51" y="264" width="22" height="3" rx="1.5" class="fill-muted/40" />
+			<rect x="21" y="271" width="16" height="6" rx="2" class="fill-text/70" />
+			<rect x="51" y="271" width="16" height="6" rx="2" class="fill-text/70" />
+
+			<!-- Нижняя навигация: машина, карта, сервисы -->
+			{[36, 90, 144].map((x, i) => (
+				<rect x={x - 8} y="356" width="16" height="14" rx="4" class={i === 0 ? 'fill-accent' : 'fill-muted/40'} />
+			))}
+		</g>
+	)}
+
+	{sketch === 'jobs' && (
+		<g>
+			<!-- Шапка: заголовок и уведомления -->
+			<rect x="12" y="29" width="38" height="7" rx="2" class="fill-text" />
+			<circle cx="164" cy="32" r="4" class="fill-accent" />
+			<rect x="161" y="35" width="6" height="2" rx="1" class="fill-accent" />
+			<path d="M0 46h180" class="stroke-border" />
+
+			<!-- Поиск -->
+			<rect x="12" y="54" width="156" height="16" rx="5" class="fill-surface-2" />
+			<circle cx="22" cy="61" r="3" class="fill-none stroke-muted/60" stroke-width="1.5" />
+			<path d="M24 63l3 3" class="stroke-muted/60" stroke-width="1.5" stroke-linecap="round" />
+			<rect x="32" y="60" width="70" height="4" rx="2" class="fill-muted/40" />
+
+			<!-- Карточки заказов: заказчик, адрес, заголовок, тип и оплата -->
+			{[78, 162, 246].map((y) => (
+				<g>
+					<circle cx="18" cy={y + 8} r="6" class="fill-muted/40" />
+					<rect x="30" y={y + 6} width="78" height="4" rx="2" class="fill-text/70" />
+					<path d={`M18 ${y + 28}c-3-4-4-6-4-8a4 4 0 0 1 8 0c0 2-1 4-4 8z`} class="fill-muted/40" />
+					<rect x="28" y={y + 18} width="112" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x="28" y={y + 24} width="76" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x="12" y={y + 36} width="34" height="5" rx="2" class="fill-text/70" />
+					<rect x="12" y={y + 45} width="60" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x="12" y={y + 54} width="44" height="11" rx="3" class="fill-accent-soft" />
+					<rect x="17" y={y + 58} width="34" height="3" rx="1.5" class="fill-accent" />
+					<rect x="134" y={y + 56} width="34" height="7" rx="2" class="fill-accent" />
+					<rect x="0" y={y + 72} width="180" height="5" class="fill-surface-2" />
+				</g>
+			))}
+			<circle cx="18" cy="338" r="6" class="fill-muted/40" />
+			<rect x="30" y="336" width="60" height="4" rx="2" class="fill-text/70" />
+
+			<!-- Кнопка карты -->
+			<circle cx="28" cy="326" r="14" class="fill-accent" />
+			<path d="M21 321l5-2 4 2 5-2v10l-5 2-4-2-5 2zm5-2v10m4-8v10" class="fill-none stroke-on-accent" stroke-width="1.3" stroke-linejoin="round" />
+
+			<!-- Нижняя навигация, активна лента -->
+			<rect x="0" y="352" width="180" height="48" class="fill-bg" />
+			<path d="M0 352h180" class="stroke-border" />
+			{[24, 57, 90, 123, 156].map((x, i) => (
+				<g class={i === 0 ? 'fill-accent' : 'fill-muted/40'}>
+					<rect x={x - 6} y="360" width="12" height="12" rx="3" />
+					<rect x={x - 9} y="376" width="18" height="3" rx="1.5" />
+				</g>
+			))}
+		</g>
+	)}
+
+	{sketch === 'fitness' && (
+		<g>
+			<!-- Шапка: меню и заголовок -->
+			<g class="fill-text">
+				<rect x="12" y="29" width="12" height="2" rx="1" />
+				<rect x="12" y="33" width="12" height="2" rx="1" />
+				<rect x="12" y="37" width="12" height="2" rx="1" />
+				<rect x="32" y="30" width="52" height="7" rx="2" />
+			</g>
+
+			<!-- Калории за день и прогресс -->
+			<rect x="12" y="56" width="40" height="7" rx="2" class="fill-accent" />
+			<rect x="128" y="55" width="40" height="4" rx="2" class="fill-muted/40" />
+			<rect x="140" y="62" width="28" height="3" rx="1.5" class="fill-muted/40" />
+			<rect x="72" y="80" width="30" height="22" rx="4" class="fill-accent" />
+			<rect x="106" y="97" width="10" height="4" rx="2" class="fill-muted/40" />
+			<rect x="12" y="118" width="156" height="4" rx="2" class="fill-surface-2" />
+			<rect x="12" y="118" width="52" height="4" rx="2" class="fill-accent" />
+
+			<!-- Белки, жиры, углеводы, ккал -->
+			{[12, 54, 96, 138].map((x) => (
+				<g>
+					<rect x={x} y="134" width="22" height="3" rx="1.5" class="fill-muted/40" />
+					<rect x={x} y="141" width="16" height="5" rx="2" class="fill-text/70" />
+				</g>
+			))}
+
+			<!-- Взвешивание -->
+			<rect x="12" y="160" width="156" height="22" rx="6" class="fill-accent" />
+			<rect x="74" y="169" width="32" height="4" rx="2" class="fill-on-accent/80" />
+
+			<!-- Приёмы пищи: фото и добавить -->
+			{[192, 226].map((y) => (
+				<g>
+					<rect x="12" y={y} width="156" height="28" rx="6" class="fill-surface-2" />
+					<rect x="22" y={y + 12} width="42" height="4" rx="2" class="fill-text/70" />
+					<rect x="134" y={y + 10} width="11" height="8" rx="2" class="fill-accent" />
+					<path d={`M155 ${y + 14}h8m-4-4v8`} class="fill-none stroke-accent" stroke-width="1.5" stroke-linecap="round" />
+				</g>
+			))}
+
+			<!-- Консультация и покупка весов -->
+			{[266, 294].map((y) => (
+				<g>
+					<rect x="12" y={y} width="156" height="22" rx="6" class="fill-accent-soft" />
+					<rect x="56" y={y + 9} width="68" height="4" rx="2" class="fill-accent" />
+				</g>
+			))}
+
+			<!-- Нижняя навигация, активна вкладка питания -->
+			<path d="M0 352h180" class="stroke-border" />
+			{[24, 57, 90, 123, 156].map((x, i) => (
+				<rect x={x - 6} y="362" width="12" height="12" rx="3" class={i === 1 ? 'fill-accent' : 'fill-muted/40'} />
+			))}
+			<rect x="49" y="378" width="16" height="3" rx="1.5" class="fill-accent" />
+		</g>
+	)}
+
+	<rect x="66" y="390" width="48" height="4" rx="2" class="fill-muted/40" />
+</svg>
