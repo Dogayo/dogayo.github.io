@@ -21,7 +21,7 @@ const nav = [
 const languages = Object.entries(localePaths) as [Locale, string][];
 ---
 
-<header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+<header class="site-header sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
 	<div class="mx-auto flex max-w-[1072px] items-center justify-between gap-3 px-4 pt-4 pb-2 md:pb-4">
 		<!-- На самых узких экранах (320px) логотип сокращается до «~/», иначе шапка не помещается. -->
 		<a href={localePaths[locale]} aria-label="~/dogayo" class="font-mono text-mono text-text">~/<span class="max-[359px]:hidden">dogayo</span></a>
