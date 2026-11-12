@@ -1,0 +1,68 @@
+---
+import Contacts from './Contacts.astro';
+import Education from './Education.astro';
+import Hero from './Hero.astro';
+import OpenSourceCard from './OpenSourceCard.astro';
+import Position from './Position.astro';
+import ProjectCard from './ProjectCard.astro';
+import Section from './Section.astro';
+import Skills from './Skills.astro';
+import TopBar from './TopBar.astro';
+import Layout from '../layouts/Layout.astro';
+import { profiles, type Locale } from '../data/profile';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const profile = profiles[locale];
+const { titles } = profile;
+// Open-source проекты выводятся отдельным блоком.
+const projects = profile.projects.filter((project) => !project.openSource);
+const openSource = profile.projects.filter((project) => project.openSource);
+---
+
+<Layout title={`${profile.fullName} — ${profile.role}`} locale={locale}>
+	<TopBar profile={profile} locale={locale} />
+	<main>
+		<Hero profile={profile} />
+
+		<Section id="about" index="01" title={titles.about}>
+			<p class="max-w-[720px] text-body">{profile.about}</p>
+		</Section>
+
+		<Section id="experience" index="02" title={titles.experience}>
+			<div class="flex flex-col gap-10">
+				<Position position={profile.experience.lastPosition} />
+				<Position position={profile.experience.earlyCareer} />
+			</div>
+		</Section>
+
+		<Section id="projects" index="03" title={titles.projects}>
+			<div class="grid gap-6 md:grid-cols-2">
+				{projects.map((project) => <ProjectCard project={project} profile={profile} />)}
+			</div>
+		</Section>
+
+		<Section id="open-source" index="04" title="Open source">
+			{openSource.map((project) => <OpenSourceCard project={project} profile={profile} />)}
+		</Section>
+
+		<Section id="skills" index="05" title={titles.skills}>
+			<Skills profile={profile} />
+		</Section>
+
+		<Section id="education" index="06" title={titles.education}>
+			<Education profile={profile} />
+		</Section>
+
+		<Section id="contacts" index="07" title={titles.contacts}>
+			<Contacts profile={profile} />
+		</Section>
+	</main>
+
+	<footer class="mx-auto mt-16 max-w-[1072px] border-t border-border px-4 py-8 md:mt-24">
+		<p class="font-mono text-mono-s text-muted">© {new Date().getFullYear()} · {profile.fullName} · Astro + Tailwind</p>
+	</footer>
+</Layout>

@@ -1,7 +1,13 @@
 ---
 import { Image } from 'astro:assets';
 import photo from '../assets/photo.jpg';
-import { profile } from '../data/profile';
+import type { Profile } from '../data/profile';
+
+interface Props {
+	profile: Profile;
+}
+
+const { profile } = Astro.props;
 
 const telegram = profile.contacts.find((c) => c.kind === 'telegram');
 const links = profile.contacts.filter((c) => c.kind === 'email' || c.kind === 'github');
@@ -65,7 +71,7 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 	<div class="flex flex-wrap items-center gap-3">
 		{profile.resumeUrl && (
 			<a href={profile.resumeUrl} class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
-				Скачать резюме
+				{profile.ui.downloadResume}
 			</a>
 		)}
 		{telegram && (

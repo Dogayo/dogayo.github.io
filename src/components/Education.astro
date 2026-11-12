@@ -1,6 +1,12 @@
 ---
-import { profile } from '../data/profile';
+import type { Profile } from '../data/profile';
 import Tag from './Tag.astro';
+
+interface Props {
+	profile: Profile;
+}
+
+const { profile } = Astro.props;
 
 const { education, selfEducation, courses, titles } = profile;
 const highlight = education.achievements.find((a) => a.includes('WorldSkills'));
