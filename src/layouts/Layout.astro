@@ -71,6 +71,8 @@ const ogLocales: Record<Locale, string> = { ru: 'ru_RU', en: 'en_US' };
 					document.documentElement.dataset.theme = theme;
 				};
 				apply();
+				// Блоки разделов прячутся до появления на экране только при работающем JS и без «уменьшить движение».
+				if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('reveal');
 				media.addEventListener('change', () => {
 					if (!stored()) apply();
 				});

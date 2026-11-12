@@ -14,3 +14,27 @@ const { id, index, title } = Astro.props;
 	<SectionHeader index={index} title={title} />
 	<slot />
 </section>
+
+<script>
+	// Появление при скролле: заголовок и блоки раздела; у контейнеров с data-stagger — каждый дочерний элемент.
+	// Элементы, попавшие на экран вместе, появляются по очереди с шагом 80ms.
+	if (document.documentElement.classList.contains('reveal')) {
+		const targets = [...document.querySelectorAll<HTMLElement>('main section[id] > *')].flatMap((el) =>
+			el.hasAttribute('data-stagger') ? [...(el.children as HTMLCollectionOf<HTMLElement>)] : [el],
+		);
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries
+					.filter((entry) => entry.isIntersecting)
+					.forEach((entry, i) => {
+						const el = entry.target as HTMLElement;
+						el.style.setProperty('--reveal-delay', `${Math.min(i, 4) * 80}ms`);
+						el.classList.add('is-visible');
+						observer.unobserve(el);
+					});
+			},
+			{ rootMargin: '0px 0px -10% 0px' },
+		);
+		for (const el of targets) observer.observe(el);
+	}
+</script>

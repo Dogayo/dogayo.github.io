@@ -55,6 +55,23 @@
 	}
 }
 
+/* Появление блоков при скролле: класс reveal ставит скрипт в <head>, is-visible — Section.astro.
+   Цели — блоки разделов, а у контейнеров с data-stagger — их дочерние элементы. */
+.reveal main section[id] > :not([data-stagger]),
+.reveal main section[id] > [data-stagger] > * {
+	opacity: 0;
+	translate: 0 12px;
+	transition:
+		opacity 500ms ease-out,
+		translate 500ms ease-out;
+	transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal main section[id] .is-visible {
+	opacity: 1;
+	translate: none;
+}
+
 @theme inline {
 	--color-bg: var(--bg);
 	--color-surface: var(--surface);
