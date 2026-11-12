@@ -1,0 +1,52 @@
+---
+import { profile } from '../data/profile';
+import Tag from './Tag.astro';
+
+const { education, selfEducation, courses, titles } = profile;
+const highlight = education.achievements.find((a) => a.includes('WorldSkills'));
+const otherAchievements = education.achievements.filter((a) => a !== highlight);
+const label = 'text-caption font-medium uppercase text-muted';
+---
+
+<article class="flex flex-col gap-4">
+	<header class="flex flex-col gap-1">
+		<p class="font-mono text-mono-s text-muted">{education.period} · {education.duration}</p>
+		<h3 class="text-h3 font-semibold">{education.institution}</h3>
+		<p class="text-small text-muted">{education.program}</p>
+	</header>
+
+	{highlight && (
+		<p class="flex max-w-[560px] items-start gap-3 rounded-[10px] bg-accent-soft px-4 py-3">
+			<span class="font-mono text-mono font-semibold text-accent" aria-hidden="true">#1</span>
+			<span class="text-small font-medium">{highlight}</span>
+		</p>
+	)}
+
+	<div class="flex flex-col gap-2">
+		<p class={label}>{titles.disciplines}</p>
+		<ul class="flex flex-wrap gap-1.5">
+			{education.disciplines.map((item) => <Tag>{item}</Tag>)}
+		</ul>
+	</div>
+
+	{otherAchievements.length > 0 && (
+		<div class="flex flex-col gap-1">
+			<p class={label}>{titles.achievements}</p>
+			{otherAchievements.map((item) => <p class="text-small">— {item}</p>)}
+		</div>
+	)}
+</article>
+
+<div class="grid gap-6 md:grid-cols-2 md:gap-8">
+	<div class="flex flex-col gap-1.5">
+		<p class={label}>{titles.courses}</p>
+		<ul class="flex flex-col gap-1.5">
+			{courses.map((item) => <li class="text-small">— {item}</li>)}
+		</ul>
+	</div>
+	<div class="flex flex-col gap-1.5">
+		<p class={label}>{titles.selfEducation}</p>
+		<p class="text-small">{selfEducation.title} · <span class="font-mono text-mono-s text-muted">{selfEducation.period}</span></p>
+		<p class="text-small text-muted">{selfEducation.description}.</p>
+	</div>
+</div>

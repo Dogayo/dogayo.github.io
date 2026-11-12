@@ -1,0 +1,19 @@
+---
+import type { SkillLevel } from '../data/profile';
+
+interface Props {
+	level?: SkillLevel;
+}
+
+const { level } = Astro.props;
+---
+
+<li
+	class:list={[
+		'rounded-md border px-2.5 py-1 font-mono text-mono-s',
+		level === 'expert' ? 'border-accent bg-accent-soft text-accent' : 'border-border bg-surface-2',
+		level === 'basic' ? 'text-muted' : level !== 'expert' && 'text-text',
+	]}
+>
+	<slot />
+</li>

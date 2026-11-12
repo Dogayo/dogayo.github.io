@@ -1,9 +1,12 @@
 ---
+import Contacts from '../components/Contacts.astro';
+import Education from '../components/Education.astro';
 import Hero from '../components/Hero.astro';
 import OpenSourceCard from '../components/OpenSourceCard.astro';
 import Position from '../components/Position.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Section from '../components/Section.astro';
+import Skills from '../components/Skills.astro';
 import TopBar from '../components/TopBar.astro';
 import Layout from '../layouts/Layout.astro';
 import { profile } from '../data/profile';
@@ -39,5 +42,21 @@ const openSource = profile.projects.filter((project) => project.openSource);
 		<Section id="open-source" index="04" title="Open source">
 			{openSource.map((project) => <OpenSourceCard project={project} titles={titles} />)}
 		</Section>
+
+		<Section id="skills" index="05" title={titles.skills}>
+			<Skills />
+		</Section>
+
+		<Section id="education" index="06" title={titles.education}>
+			<Education />
+		</Section>
+
+		<Section id="contacts" index="07" title={titles.contacts}>
+			<Contacts />
+		</Section>
 	</main>
+
+	<footer class="mx-auto mt-16 max-w-[1072px] border-t border-border px-4 py-8 md:mt-24">
+		<p class="font-mono text-mono-s text-muted">© {new Date().getFullYear()} · {profile.fullName} · Astro + Tailwind</p>
+	</footer>
 </Layout>

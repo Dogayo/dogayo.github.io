@@ -1,0 +1,18 @@
+---
+import { profile } from '../data/profile';
+
+const order = ['email', 'telegram', 'github', 'linkedin'] as const;
+const contacts = [...profile.contacts].sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+---
+
+<p class="max-w-[640px] text-body">{profile.contactsLead}</p>
+<ul class="flex flex-col gap-1 md:flex-row md:gap-8">
+	{contacts.map((contact) => (
+		<li>
+			<a href={contact.url} class="inline-flex gap-2 py-2 font-mono text-mono text-text transition-colors hover:text-accent">
+				{contact.kind === 'email' ? contact.label : contact.url.replace('https://', '')}
+				<span class="text-accent" aria-hidden="true">↗</span>
+			</a>
+		</li>
+	))}
+</ul>
