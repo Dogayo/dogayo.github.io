@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { profile } from '../data/profile';
 ---
 
-<Layout title="Александр Догаев — Flutter-разработчик">
+<Layout title={`${profile.fullName} — ${profile.role}`}>
 	<main></main>
 </Layout>
