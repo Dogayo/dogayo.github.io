@@ -9,6 +9,11 @@ import vue from '@astrojs/vue';
 export default defineConfig({
   site: 'https://dogayo.github.io',
 
+  // CSS небольшой (~7 КБ): встроенный в HTML, он не блокирует первую отрисовку отдельным запросом.
+  build: {
+    inlineStylesheets: 'always'
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

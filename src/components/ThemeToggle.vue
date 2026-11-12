@@ -39,7 +39,7 @@ function select(theme: Theme) {
 			type="button"
 			:aria-pressed="current === option.value"
 			:class="[
-				'rounded-full px-3 py-1.5 font-mono text-mono-s transition-colors',
+				'rounded-full px-2.5 py-1.5 font-mono text-mono-s transition-colors sm:px-3',
 				option.value === 'light'
 					? 'bg-surface text-text dark:bg-transparent dark:text-muted dark:hover:text-text'
 					: 'text-muted hover:text-text dark:bg-surface dark:text-text',

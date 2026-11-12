@@ -85,12 +85,12 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 						: 'bg-accent text-on-accent hover:opacity-90',
 				]}
 			>
-				{telegram.label} ↗
+				{telegram.label} <span aria-hidden="true">↗</span>
 			</a>
 		)}
 		{links.map((link) => (
 			<a href={link.url} class="px-1 py-3 font-mono text-mono text-text transition-colors hover:text-accent">
-				{link.kind === 'email' ? link.label : link.url.replace('https://', '')} <span class="text-accent">↗</span>
+				{link.kind === 'email' ? link.label : link.url.replace('https://', '')} <span class="text-accent" aria-hidden="true">↗</span>
 			</a>
 		))}
 	</div>
