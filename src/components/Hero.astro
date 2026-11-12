@@ -1,20 +1,26 @@
 ---
 import { Image } from 'astro:assets';
 import photo from '../assets/photo.jpg';
-import type { Profile } from '../data/profile';
+import { born, type Locale, type Profile } from '../data/profile';
+import { ageAt, formatAge } from '../lib/age';
 
 interface Props {
 	profile: Profile;
+	locale: Locale;
 }
 
-const { profile } = Astro.props;
+const { profile, locale } = Astro.props;
 
 const telegram = profile.contacts.find((c) => c.kind === 'telegram');
 const links = profile.contacts.filter((c) => c.kind === 'email' || c.kind === 'github');
 
-// Строки в духе вывода neofetch.
+// Возраст на момент сборки; скрипт ниже пересчитывает его в браузере.
+const age = formatAge(ageAt(new Date(), born), locale, profile.ui.ageWords);
+
+// Строки в духе вывода neofetch; uptime — возраст.
 const keys = [
 	{ key: 'role', value: profile.role },
+	{ key: 'uptime', value: age, age: true },
 	{ key: 'exp', value: profile.stats.map((s) => `${s.value} ${s.label}`).join(' · ') },
 	{ key: 'stack', value: profile.stack.join(', ') },
 	{ key: 'loc', value: `${profile.location} · ${profile.workFormat}` },
@@ -52,10 +58,15 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 			<div class="col-span-2 flex flex-col gap-3 md:col-span-1 md:col-start-2 md:gap-3.5">
 				<hr class="border-border" />
 				<dl class="grid grid-cols-[56px_minmax(0,1fr)] gap-x-2 gap-y-1.5 font-mono text-mono">
-					{keys.map(({ key, value, accent }) => (
+					{keys.map(({ key, value, accent, age }) => (
 						<>
 							<dt class="text-accent">{key}</dt>
-							<dd class:list={[accent ? 'text-accent' : 'text-text']}>{value}</dd>
+							<dd
+								class:list={[accent ? 'text-accent' : 'text-text']}
+								data-age={age ? JSON.stringify({ born, locale, words: profile.ui.ageWords }) : undefined}
+							>
+								{value}
+							</dd>
 						</>
 					))}
 				</dl>
@@ -96,3 +107,13 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 		))}
 	</div>
 </section>
+
+<script>
+	import { ageAt, formatAge } from '../lib/age';
+
+	// Данные приходят из разметки, чтобы не тянуть profile.ts в браузер.
+	for (const el of document.querySelectorAll<HTMLElement>('[data-age]')) {
+		const { born, locale, words } = JSON.parse(el.dataset.age!);
+		el.textContent = formatAge(ageAt(new Date(), born), locale, words);
+	}
+</script>

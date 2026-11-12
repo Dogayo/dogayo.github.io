@@ -1,3 +1,5 @@
+import type { AgeWords, Born } from '../lib/age';
+
 // Весь текст сайта. Разметка только читает эти данные, при сборке они превращаются в HTML.
 // Чтобы добавить язык, расширьте Locale, добавьте объект в profiles и путь в localePaths: TypeScript потребует все поля.
 
@@ -66,6 +68,11 @@ export interface SelfEducation {
 	description: string;
 }
 
+export interface Interest {
+	title: string;
+	text: string;
+}
+
 export interface SectionTitles {
 	about: string;
 	experience: string;
@@ -79,6 +86,9 @@ export interface SectionTitles {
 	courses: string;
 	skills: string;
 	contacts: string;
+	personal: string;
+	interests: string;
+	learning: string;
 	task: string;
 	role: string;
 	solutions: string;
@@ -105,6 +115,7 @@ export interface UiStrings {
 	apk: string;
 	demo: string;
 	levels: Record<SkillLevel, string>;
+	ageWords: AgeWords;
 }
 
 export interface Profile {
@@ -132,6 +143,9 @@ export interface Profile {
 	selfEducation: SelfEducation;
 	courses: string[];
 	skills: SkillGroup[];
+	/** Пустой список скрывает блок. */
+	interests: Interest[];
+	learning: string[];
 	titles: SectionTitles;
 	ui: UiStrings;
 }
@@ -383,6 +397,17 @@ const ru: Profile = {
 			],
 		},
 	],
+	interests: [
+		{
+			title: 'Баскетбол',
+			text: 'Каждый четверг играю в любительских играх. Лучший способ переключиться после недели за компьютером.',
+		},
+	],
+	learning: [
+		'Flutter глубже: производительность, тестирование, нативная интеграция и Kotlin Multiplatform',
+		'Шире мобилки: бэкенд и архитектура, AI-инструменты в разработке, дизайн интерфейсов',
+		'Английский: подтягиваю с A2 до свободного рабочего уровня',
+	],
 	titles: {
 		about: 'Обо мне',
 		experience: 'Опыт',
@@ -396,6 +421,9 @@ const ru: Profile = {
 		courses: 'Курсы и сертификации',
 		skills: 'Навыки',
 		contacts: 'Контакты',
+		personal: 'Не только код',
+		interests: 'Интересы',
+		learning: 'Сейчас изучаю',
 		task: 'Задача',
 		role: 'Роль',
 		solutions: 'Решения',
@@ -424,6 +452,7 @@ const ru: Profile = {
 			intermediate: 'рабочий уровень',
 			basic: 'базовый',
 		},
+		ageWords: { one: 'год', few: 'года', many: 'лет', other: 'лет' },
 	},
 };
 
@@ -643,6 +672,17 @@ const en: Profile = {
 			],
 		},
 	],
+	interests: [
+		{
+			title: 'Basketball',
+			text: 'Amateur games every Thursday. My favourite way to switch off after a week at the computer.',
+		},
+	],
+	learning: [
+		'Going deeper into Flutter: performance, testing, native integration and Kotlin Multiplatform',
+		'Beyond mobile: backend and architecture, AI tools in development, interface design',
+		'English: improving from A2 to a confident working level',
+	],
 	titles: {
 		about: 'About',
 		experience: 'Experience',
@@ -656,6 +696,9 @@ const en: Profile = {
 		courses: 'Courses and certifications',
 		skills: 'Skills',
 		contacts: 'Contacts',
+		personal: 'Beyond code',
+		interests: 'Interests',
+		learning: 'Currently learning',
 		task: 'Task',
 		role: 'Role',
 		solutions: 'Solutions',
@@ -684,8 +727,12 @@ const en: Profile = {
 			intermediate: 'working level',
 			basic: 'basic',
 		},
+		ageWords: { one: 'year', other: 'years' },
 	},
 };
+
+/** Только год и месяц: точная дата рождения не публикуется. Возраст растёт с 1-го числа месяца. */
+export const born: Born = { year: 2000, month: 10 };
 
 export const defaultLocale: Locale = 'ru';
 
