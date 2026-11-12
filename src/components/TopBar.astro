@@ -10,24 +10,29 @@ interface Props {
 const { profile, locale } = Astro.props;
 const { ui } = profile;
 
+// sections — разделы, при которых пункт подсвечен: соседние разделы без своего пункта относятся к ближайшему.
 const nav = [
-	{ href: '#experience', label: ui.nav.experience },
-	{ href: '#projects', label: ui.nav.projects },
-	{ href: '#skills', label: ui.nav.skills },
-	{ href: '#contacts', label: ui.nav.contacts },
+	{ href: '#experience', label: ui.nav.experience, sections: ['experience'] },
+	{ href: '#projects', label: ui.nav.projects, sections: ['projects', 'open-source'] },
+	{ href: '#skills', label: ui.nav.skills, sections: ['skills', 'education', 'personal'] },
+	{ href: '#contacts', label: ui.nav.contacts, sections: ['contacts'] },
 ];
 
 const languages = Object.entries(localePaths) as [Locale, string][];
 ---
 
-<header class="border-b border-border">
+<header class="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
 	<div class="mx-auto flex max-w-[1072px] items-center justify-between gap-3 px-4 py-4">
 		<!-- На самых узких экранах (320px) логотип сокращается до «~/», иначе шапка не помещается. -->
 		<a href={localePaths[locale]} aria-label="~/dogayo" class="font-mono text-mono text-text">~/<span class="max-[359px]:hidden">dogayo</span></a>
 		<div class="flex items-center gap-2 sm:gap-3 md:gap-6">
 			<nav aria-label={ui.navLabel} class="hidden gap-6 md:flex">
 				{nav.map((item) => (
-					<a href={item.href} class="font-mono text-mono-s text-muted transition-colors hover:text-accent">
+					<a
+						href={item.href}
+						data-spy={item.sections.join(' ')}
+						class="font-mono text-mono-s text-muted transition-colors hover:text-accent aria-[current=location]:text-accent"
+					>
 						{item.label}
 					</a>
 				))}
@@ -47,3 +52,40 @@ const languages = Object.entries(localePaths) as [Locale, string][];
 		</div>
 	</div>
 </header>
+
+<script>
+	// Подсветка пункта меню текущего раздела: текущий — последний раздел, чей верх прошёл под шапку.
+	const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-spy]')];
+	const header = document.querySelector('header');
+	const sections = links.flatMap((link) =>
+		link.dataset.spy!.split(' ').flatMap((id) => {
+			const section = document.getElementById(id);
+			return section ? [{ section, link }] : [];
+		}),
+	);
+	sections.sort((a, b) => a.section.offsetTop - b.section.offsetTop);
+
+	let frame = 0;
+	const update = () => {
+		frame = 0;
+		const line = (header?.offsetHeight ?? 0) + window.innerHeight * 0.25;
+		const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+		let current: HTMLAnchorElement | undefined;
+		for (const { section, link } of sections) {
+			if (section.getBoundingClientRect().top <= line) current = link;
+		}
+		// Последний раздел короткий и может не дойти до линии — внизу страницы подсвечиваем его.
+		if (atBottom && sections.length) current = sections[sections.length - 1].link;
+		for (const link of links) {
+			if (link === current) link.setAttribute('aria-current', 'location');
+			else link.removeAttribute('aria-current');
+		}
+	};
+	const schedule = () => {
+		if (!frame) frame = requestAnimationFrame(update);
+	};
+
+	addEventListener('scroll', schedule, { passive: true });
+	addEventListener('resize', schedule);
+	update();
+</script>
