@@ -11,4 +11,6 @@ npm run check   # проверка типов
 npm run build   # сборка в dist/
 ```
 
+Сайт собирается и публикуется на GitHub Pages через GitHub Actions (`.github/workflows/deploy.yml`) при каждом пуше в `main`. На pull request запускаются `astro check` и сборка.
+
 Прошлая версия сайта на Flutter Web лежит в теге `flutter-version`.
