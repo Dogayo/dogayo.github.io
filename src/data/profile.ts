@@ -116,6 +116,7 @@ export interface UiStrings {
 	demo: string;
 	levels: Record<SkillLevel, string>;
 	ageWords: AgeWords;
+	backToTop: string;
 	notFound: {
 		title: string;
 		error: string;
@@ -458,6 +459,7 @@ const ru: Profile = {
 			basic: 'базовый',
 		},
 		ageWords: { one: 'год', few: 'года', many: 'лет', other: 'лет' },
+		backToTop: 'Наверх',
 		notFound: {
 			title: 'Такой страницы нет',
 			error: 'Нет такого файла или каталога',
@@ -738,6 +740,7 @@ const en: Profile = {
 			basic: 'basic',
 		},
 		ageWords: { one: 'year', other: 'years' },
+		backToTop: 'Back to top',
 		notFound: {
 			title: 'Page not found',
 			error: 'No such file or directory',
