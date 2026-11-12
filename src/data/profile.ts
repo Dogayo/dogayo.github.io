@@ -46,6 +46,9 @@ export interface Project {
 	openSource?: boolean;
 	repoUrl?: string;
 	demoUrl?: string;
+	/** Последний релиз со сборкой APK. */
+	apkUrl?: string;
+	license?: string;
 }
 
 export interface Education {
@@ -268,6 +271,8 @@ const ru: Profile = {
 			openSource: true,
 			repoUrl: 'https://github.com/Dogayo/wayback',
 			demoUrl: 'https://dogayo.github.io/wayback',
+			apkUrl: 'https://github.com/Dogayo/wayback/releases/latest',
+			license: 'MIT',
 		},
 	],
 	education: {

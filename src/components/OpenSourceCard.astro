@@ -1,0 +1,57 @@
+---
+import type { Project, SectionTitles } from '../data/profile';
+
+interface Props {
+	project: Project;
+	titles: SectionTitles;
+}
+
+const { project, titles } = Astro.props;
+
+const links = [
+	{ href: project.repoUrl, label: project.repoUrl?.replace('https://', '') },
+	{ href: project.apkUrl, label: 'APK в релизах' },
+	{ href: project.demoUrl, label: 'Демо дизайн-системы' },
+].filter((link): link is { href: string; label: string } => Boolean(link.href && link.label));
+---
+
+<article class="flex flex-col gap-5 rounded-2xl border border-accent bg-surface p-5 md:p-8">
+	<header class="flex flex-wrap items-center gap-3">
+		<h3 class="text-h2 font-bold">{project.title}</h3>
+		<span class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">open source</span>
+		{project.license && (
+			<span class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{project.license}</span>
+		)}
+		<span class="font-mono text-mono-s text-muted">{project.period}</span>
+	</header>
+
+	<p class="max-w-[760px] text-body">{project.task}</p>
+
+	<div class="flex flex-col gap-1">
+		<p class="text-caption font-medium uppercase text-muted">{titles.solutions}</p>
+		<ul class="grid gap-1 md:grid-cols-2 md:gap-x-8">
+			{project.solutions.map((item) => (
+				<li class="flex gap-2 text-small">
+					<span class="font-mono text-accent" aria-hidden="true">→</span>
+					<span>{item}</span>
+				</li>
+			))}
+		</ul>
+	</div>
+
+	<ul class="flex flex-wrap gap-1.5" aria-label="Стек">
+		{project.tags.map((tag) => (
+			<li class="rounded-md border border-border bg-surface-2 px-2.5 py-1 font-mono text-mono-s">{tag}</li>
+		))}
+	</ul>
+
+	<ul class="flex flex-col gap-1 border-t border-border pt-4 md:flex-row md:gap-8">
+		{links.map((link) => (
+			<li>
+				<a href={link.href} class="inline-flex gap-2 py-2 font-mono text-mono text-text transition-colors hover:text-accent">
+					{link.label} <span class="text-accent" aria-hidden="true">↗</span>
+				</a>
+			</li>
+		))}
+	</ul>
+</article>

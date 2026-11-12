@@ -1,5 +1,6 @@
 ---
 import Hero from '../components/Hero.astro';
+import OpenSourceCard from '../components/OpenSourceCard.astro';
 import Position from '../components/Position.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Section from '../components/Section.astro';
@@ -10,6 +11,7 @@ import { profile } from '../data/profile';
 const { titles } = profile;
 // Open-source проекты выводятся отдельным блоком.
 const projects = profile.projects.filter((project) => !project.openSource);
+const openSource = profile.projects.filter((project) => project.openSource);
 ---
 
 <Layout title={`${profile.fullName} — ${profile.role}`}>
@@ -32,6 +34,10 @@ const projects = profile.projects.filter((project) => !project.openSource);
 			<div class="grid gap-6 md:grid-cols-2">
 				{projects.map((project) => <ProjectCard project={project} titles={titles} />)}
 			</div>
+		</Section>
+
+		<Section id="open-source" index="04" title="Open source">
+			{openSource.map((project) => <OpenSourceCard project={project} titles={titles} />)}
 		</Section>
 	</main>
 </Layout>
