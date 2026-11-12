@@ -23,7 +23,12 @@ const projects = profile.projects.filter((project) => !project.openSource);
 const openSource = profile.projects.filter((project) => project.openSource);
 ---
 
-<Layout title={`${profile.fullName} — ${profile.role}`} locale={locale}>
+<Layout
+	title={`${profile.fullName} — ${profile.role}`}
+	description={profile.description}
+	imageAlt={`${profile.fullName} — ${profile.role}. ${profile.tagline}`}
+	locale={locale}
+>
 	<TopBar profile={profile} locale={locale} />
 	<main>
 		<Hero profile={profile} />
