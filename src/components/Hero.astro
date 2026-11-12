@@ -69,9 +69,10 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 	<p class="text-body md:text-h3 md:font-medium">{profile.tagline}</p>
 
 	<div class="flex flex-wrap items-center gap-3">
+		<!-- PDF открывается в новой вкладке: в просмотрщике браузера его можно скачать или распечатать. -->
 		{profile.resumeUrl && (
-			<a href={profile.resumeUrl} download class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
-				{profile.ui.downloadResume}
+			<a href={profile.resumeUrl} target="_blank" rel="noopener" class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
+				{profile.ui.downloadResume} <span aria-hidden="true">↗</span>
 			</a>
 		)}
 		{telegram && (
