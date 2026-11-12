@@ -601,15 +601,22 @@ const bids = [44, 38, 26, 30, 50, 20, 24, 18];
 </style>
 
 <script>
-	// Линза открывается над свободным местом и закрывается над тем, что видно: текстом, картинками, ссылками,
-	// блоками с фоном или рамкой. Невидимые обёртки разметки не в счёт. Положение и состояние обновляются раз в кадр.
+	// Линза открывается над свободным местом и закрывается, если под кругом окажется то, что видно: текст, картинки,
+	// ссылки, блоки с фоном или рамкой. Проверяется не только точка под курсором, но и кольца точек вокруг — иначе
+	// край линзы наползал бы на соседний текст. Пока выделяется текст, линзы нет.
+	// Невидимые обёртки разметки не в счёт. Положение и состояние обновляются раз в кадр.
 	const layer = document.querySelector<HTMLElement>('[data-lens]');
 	if (layer && matchMedia('(hover: hover) and (pointer: fine)').matches) {
 		let x = 0;
 		let y = 0;
 		let inside = false;
+		let pressed = false;
 		let frame = 0;
 		const range = document.createRange();
+		// Точки проверки: центр и два кольца внутри круга линзы (радиус 150px, плотная часть — до 102px).
+		const probes = [[0, 0]].concat(
+			...[60, 120].map((r) => Array.from({ length: 8 }, (_, i) => [Math.cos((i * Math.PI) / 4) * r, Math.sin((i * Math.PI) / 4) * r])),
+		);
 		const transparent = (color: string) => color === 'transparent' || /rgba\(.*,\s*0\)$/.test(color);
 		// Блок виден, если у него есть фон или рамка со всех сторон; одиночная линия-разделитель — нет.
 		const visibleBox = (el: Element) => {
@@ -618,26 +625,30 @@ const bids = [44, 38, 26, 30, 50, 20, 24, 18];
 			const sides = ['Top', 'Right', 'Bottom', 'Left'] as const;
 			return sides.every((side) => parseFloat(style[`border${side}Width`]) > 0 && !transparent(style[`border${side}Color`]));
 		};
-		// Курсор над строкой текста, а не над пустым концом абзаца; небольшой запас вокруг букв.
-		const overText = (el: Element) =>
+		// Точка над строкой текста, а не над пустым концом абзаца; небольшой запас вокруг букв.
+		const overText = (el: Element, px: number, py: number) =>
 			[...el.childNodes].some((node) => {
 				if (node.nodeType !== Node.TEXT_NODE || !node.textContent?.trim()) return false;
 				range.selectNodeContents(node);
-				return [...range.getClientRects()].some((r) => x > r.left - 12 && x < r.right + 12 && y > r.top - 8 && y < r.bottom + 8);
+				return [...range.getClientRects()].some((r) => px > r.left - 12 && px < r.right + 12 && py > r.top - 8 && py < r.bottom + 8);
 			});
-		const free = (hit: Element | null) => {
-			if (!hit || overText(hit)) return false;
+		const freeAt = (px: number, py: number) => {
+			// Точки за краем окна не мешают: там ничего не видно, и elementFromPoint вернёт null.
+			const hit = document.elementFromPoint(px, py);
+			if (!hit) return true;
+			if (overText(hit, px, py)) return false;
 			for (let el: Element | null = hit; el && el !== document.body; el = el.parentElement) {
 				if (el.matches('a, button, img, picture, svg, input, label, hr') || visibleBox(el)) return false;
 			}
 			return true;
 		};
+		const selecting = () => pressed || !(document.getSelection()?.isCollapsed ?? true);
 		const draw = () => {
 			frame = 0;
 			layer.style.setProperty('--lens-x', `${x}px`);
 			layer.style.setProperty('--lens-y', `${y}px`);
 			layer.style.setProperty('--lens-scroll', `${scrollY}px`);
-			layer.classList.toggle('is-open', inside && free(document.elementFromPoint(x, y)));
+			layer.classList.toggle('is-open', inside && !selecting() && probes.every(([dx, dy]) => freeAt(x + dx, y + dy)));
 		};
 		const schedule = () => {
 			frame ||= requestAnimationFrame(draw);
@@ -649,10 +660,20 @@ const bids = [44, 38, 26, 30, 50, 20, 24, 18];
 				x = event.clientX;
 				y = event.clientY;
 				inside = true;
+				pressed = event.buttons !== 0;
 				schedule();
 			},
 			{ passive: true },
 		);
+		addEventListener('pointerdown', () => {
+			pressed = true;
+			schedule();
+		});
+		addEventListener('pointerup', () => {
+			pressed = false;
+			schedule();
+		});
+		document.addEventListener('selectionchange', schedule);
 		addEventListener('scroll', schedule, { passive: true });
 		document.documentElement.addEventListener('pointerleave', () => {
 			inside = false;
