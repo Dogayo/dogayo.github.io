@@ -87,7 +87,10 @@ export interface Profile {
 	tagline: string;
 	stack: string[];
 	location: string;
-	availability: string[];
+	workFormat: string;
+	status: string;
+	/** Ссылка на PDF-резюме; пока его нет, кнопка не показывается. */
+	resumeUrl?: string;
 	about: string;
 	stats: Stat[];
 	contacts: Contact[];
@@ -116,14 +119,12 @@ const ru: Profile = {
 		'Web3',
 		'CI/CD',
 	],
-	location: 'Томск, Россия',
-	availability: [
-		'Удалённо или переезд',
-		'Открыт к предложениям',
-	],
+	location: 'Томск',
+	workFormat: 'удалённо или переезд',
+	status: 'открыт к предложениям',
 	about: 'Пишу на Flutter с 2021 года, до этого полтора года разрабатывал на Java. 4,5 года в Crypton Studio делал крипто- и финтех-приложения: биржи, кошельки, необанки. Проектирую архитектуру и дизайн-системы, провожу код-ревью, собрал внутренний Starter Kit компании. В 2020 году занял первое место на региональном WorldSkills по мобильной разработке.',
 	stats: [
-		{ value: '4+', label: 'лет во Flutter' },
+		{ value: '5+', label: 'лет во Flutter' },
 		{ value: '7', label: 'проектов' },
 		{ value: '50К+', label: 'установок' },
 	],
