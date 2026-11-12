@@ -20,7 +20,7 @@ onMounted(() => {
 	current.value = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
 });
 
-function select(theme: Theme) {
+function apply(theme: Theme) {
 	current.value = theme;
 	document.documentElement.dataset.theme = theme;
 	try {
@@ -28,6 +28,31 @@ function select(theme: Theme) {
 	} catch {
 		// Хранилище недоступно (приватный режим) — тема просто не запомнится.
 	}
+}
+
+// Новая тема раскрывается кругом от нажатой кнопки; без View Transitions или при
+// «уменьшить движение» — мгновенно.
+function select(theme: Theme, event: MouseEvent) {
+	const root = document.documentElement;
+	if (theme === root.dataset.theme || !document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		apply(theme);
+		return;
+	}
+
+	const button = (event.currentTarget as HTMLElement).getBoundingClientRect();
+	const x = button.left + button.width / 2;
+	const y = button.top + button.height / 2;
+	const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+	root.classList.add('theme-transition');
+	const transition = document.startViewTransition(() => apply(theme));
+	transition.ready.then(() => {
+		root.animate(
+			{ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+			{ duration: 500, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' },
+		);
+	});
+	transition.finished.finally(() => root.classList.remove('theme-transition'));
 }
 </script>
 
@@ -44,7 +69,7 @@ function select(theme: Theme) {
 					? 'bg-surface text-text dark:bg-transparent dark:text-muted dark:hover:text-text'
 					: 'text-muted hover:text-text dark:bg-surface dark:text-text',
 			]"
-			@click="select(option.value)"
+			@click="select(option.value, $event)"
 		>
 			{{ option.label }}
 		</button>

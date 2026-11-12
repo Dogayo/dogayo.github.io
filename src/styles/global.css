@@ -73,6 +73,28 @@
 	translate: none;
 }
 
+/* Переходы между страницами (смена языка): содержимое перетекает, шапка остаётся на месте. */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+
+.site-header {
+	view-transition-name: site-header;
+}
+
+/* Смена темы: вместо перетекания новая тема раскрывается кругом (анимация — в ThemeToggle.vue). */
+.theme-transition .site-header {
+	view-transition-name: none;
+}
+
+.theme-transition::view-transition-old(root),
+.theme-transition::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
 /* Фокус с клавиатуры — акцентной обводкой во всех темах. */
 @layer base {
 	:focus-visible {
