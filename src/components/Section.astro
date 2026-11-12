@@ -30,6 +30,14 @@ const { id, index, title } = Astro.props;
 						const el = entry.target as HTMLElement;
 						el.style.setProperty('--reveal-delay', `${Math.min(i, 4) * 80}ms`);
 						el.classList.add('is-visible');
+						// Когда блок появился, правила появления снимаются — дальше работают его собственные переходы.
+						const done = (event: TransitionEvent) => {
+							if (event.target !== el) return;
+							el.removeEventListener('transitionend', done);
+							el.classList.replace('is-visible', 'revealed');
+							el.style.removeProperty('--reveal-delay');
+						};
+						el.addEventListener('transitionend', done);
 						observer.unobserve(el);
 					});
 			},
