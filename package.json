@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "resume": "node scripts/resume/build.mjs --variant sidebar --locale ru --locale en --out public --name Dogaev_Flutter_Developer_{locale}"
   },
   "dependencies": {
     "@astrojs/vue": "^7.1.5",

@@ -70,7 +70,7 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 
 	<div class="flex flex-wrap items-center gap-3">
 		{profile.resumeUrl && (
-			<a href={profile.resumeUrl} class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
+			<a href={profile.resumeUrl} download class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition-opacity hover:opacity-90">
 				{profile.ui.downloadResume}
 			</a>
 		)}
@@ -79,7 +79,7 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 				href={telegram.url}
 				class:list={[
 					'rounded-[10px] px-5 py-3 text-small font-medium transition',
-					// Пока нет PDF-резюме, Telegram — главное действие.
+					// Без PDF-резюме Telegram становится главным действием.
 					profile.resumeUrl
 						? 'border border-border text-text hover:border-accent'
 						: 'bg-accent text-on-accent hover:opacity-90',
