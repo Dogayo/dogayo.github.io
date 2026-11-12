@@ -4,27 +4,57 @@ import { defaultLocale, localePaths, type Locale } from '../data/profile';
 
 interface Props {
 	title: string;
+	description: string;
+	/** Подпись к картинке превью для экранных читалок. */
+	imageAlt: string;
 	locale: Locale;
 }
 
-const { title, locale } = Astro.props;
+const { title, description, imageAlt, locale } = Astro.props;
+const canonical = new URL(localePaths[locale], Astro.site).href;
+const image = new URL(`/og/${locale}.png`, Astro.site).href;
 // Ссылки на все языковые версии, чтобы поисковики показывали нужную.
 const alternates = (Object.entries(localePaths) as [Locale, string][]).map(([lang, path]) => ({
 	lang,
 	href: new URL(path, Astro.site).href,
 }));
+const ogLocales: Record<Locale, string> = { ru: 'ru_RU', en: 'en_US' };
 ---
 
 <html lang={locale}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="/favicon.ico" sizes="48x48" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
 		{alternates.map(({ lang, href }) => <link rel="alternate" hreflang={lang} href={href} />)}
 		<link rel="alternate" hreflang="x-default" href={new URL(localePaths[defaultLocale], Astro.site).href} />
+
+		<!-- Превью ссылки в мессенджерах и соцсетях. -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="dogayo.github.io" />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={image} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={imageAlt} />
+		<meta property="og:locale" content={ogLocales[locale]} />
+		{(Object.keys(ogLocales) as Locale[])
+			.filter((lang) => lang !== locale)
+			.map((lang) => <meta property="og:locale:alternate" content={ogLocales[lang]} />)}
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={image} />
+		<meta name="twitter:image:alt" content={imageAlt} />
 		<!-- Ставит тему до отрисовки, чтобы не было мигания: сохранённый выбор или системная настройка. -->
 		<script is:inline>
 			(() => {

@@ -111,6 +111,8 @@ export interface Profile {
 	fullName: string;
 	role: string;
 	tagline: string;
+	/** Описание для поиска и превью ссылки, до ~160 символов. */
+	description: string;
 	stack: string[];
 	location: string;
 	workFormat: string;
@@ -138,6 +140,7 @@ const ru: Profile = {
 	fullName: 'Александр Догаев',
 	role: 'Flutter-разработчик · Middle+',
 	tagline: 'Веду Flutter-приложения от архитектуры до релиза в App Store и Google Play.',
+	description: 'Flutter-разработчик, 5+ лет. Финтех и крипто: биржи, кошельки, необанки. Архитектура, дизайн-системы, релизы в App Store и Google Play.',
 	stack: [
 		'Flutter',
 		'Dart',
@@ -426,6 +429,7 @@ const en: Profile = {
 	fullName: 'Alexander Dogaev',
 	role: 'Flutter Developer · Middle+',
 	tagline: 'I take Flutter apps from architecture to release on the App Store and Google Play.',
+	description: 'Flutter developer with 5+ years of experience. Fintech and crypto: exchanges, wallets, neobanks. Architecture, design systems, App Store and Google Play releases.',
 	stack: ru.stack,
 	location: 'Tomsk, Russia',
 	workFormat: 'remote or relocation',
