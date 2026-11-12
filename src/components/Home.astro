@@ -5,6 +5,7 @@ import Hero from './Hero.astro';
 import OpenSourceCard from './OpenSourceCard.astro';
 import Personal from './Personal.astro';
 import Position from './Position.astro';
+import ScreenLens from './ScreenLens.astro';
 import ProjectCard from './ProjectCard.astro';
 import Section from './Section.astro';
 import Skills from './Skills.astro';
@@ -30,6 +31,7 @@ const openSource = profile.projects.filter((project) => project.openSource);
 	imageAlt={`${profile.fullName} — ${profile.role}. ${profile.tagline}`}
 	locale={locale}
 >
+	<ScreenLens />
 	<TopBar profile={profile} locale={locale} />
 	<main>
 		<Hero profile={profile} locale={locale} />
