@@ -51,18 +51,21 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 			/>
 
 			<div class="self-center md:self-start">
-				<p class="font-mono text-mono-s text-accent md:text-mono">$ neofetch</p>
+				<p class="font-mono text-mono-s text-accent md:text-mono">
+					<span class="term-typing" style="--chars: 10">$ neofetch</span><span class="ml-0.5 inline-block h-[1.1em] w-[0.6em] translate-y-[0.15em] animate-blink bg-accent motion-reduce:animate-none" aria-hidden="true"></span>
+				</p>
 				<h1 class="text-h2 font-bold md:mt-3.5 md:text-display">{profile.fullName}</h1>
 			</div>
 
 			<div class="col-span-2 flex flex-col gap-3 md:col-span-1 md:col-start-2 md:gap-3.5">
 				<hr class="border-border" />
 				<dl class="grid grid-cols-[56px_minmax(0,1fr)] gap-x-2 gap-y-1.5 font-mono text-mono">
-					{keys.map(({ key, value, accent, age }) => (
+					{keys.map(({ key, value, accent, age }, i) => (
 						<>
-							<dt class="text-accent">{key}</dt>
+							<dt class="term-line text-accent" style={`--line: ${i}`}>{key}</dt>
 							<dd
-								class:list={[accent ? 'text-accent' : 'text-text']}
+								class:list={['term-line', accent ? 'text-accent' : 'text-text']}
+								style={`--line: ${i}`}
 								data-age={age ? JSON.stringify({ born, locale, words: profile.ui.ageWords }) : undefined}
 							>
 								{value}
@@ -70,7 +73,7 @@ const palette = ['bg-text', 'bg-muted', 'bg-border', 'bg-surface-2', 'bg-accent-
 						</>
 					))}
 				</dl>
-				<div class="flex" aria-hidden="true">
+				<div class="term-line flex" style={`--line: ${keys.length}`} aria-hidden="true">
 					{palette.map((color) => <span class:list={['h-3 w-5 md:w-6', color]}></span>)}
 				</div>
 			</div>
