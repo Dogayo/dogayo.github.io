@@ -3,6 +3,7 @@ import Contacts from './Contacts.astro';
 import Education from './Education.astro';
 import Hero from './Hero.astro';
 import OpenSourceCard from './OpenSourceCard.astro';
+import Personal from './Personal.astro';
 import Position from './Position.astro';
 import ProjectCard from './ProjectCard.astro';
 import Section from './Section.astro';
@@ -31,7 +32,7 @@ const openSource = profile.projects.filter((project) => project.openSource);
 >
 	<TopBar profile={profile} locale={locale} />
 	<main>
-		<Hero profile={profile} />
+		<Hero profile={profile} locale={locale} />
 
 		<Section id="about" index="01" title={titles.about}>
 			<p class="max-w-[720px] text-body">{profile.about}</p>
@@ -62,7 +63,11 @@ const openSource = profile.projects.filter((project) => project.openSource);
 			<Education profile={profile} />
 		</Section>
 
-		<Section id="contacts" index="07" title={titles.contacts}>
+		<Section id="personal" index="07" title={titles.personal}>
+			<Personal profile={profile} />
+		</Section>
+
+		<Section id="contacts" index="08" title={titles.contacts}>
 			<Contacts profile={profile} />
 		</Section>
 	</main>
