@@ -34,9 +34,8 @@ const { id, index, title } = Astro.props;
 			};
 			el.addEventListener('transitionend', done);
 		};
-		// Всё, что хоть краем видно при загрузке, появляется сразу: иначе блок у нижнего края ждёт первого скролла.
-		const onScreen = targets.filter((el) => el.getBoundingClientRect().top < innerHeight);
-		onScreen.forEach(reveal);
+		// Блок появляется с первого показавшегося пикселя. Скрытый блок сдвинут вниз на 12px (translate в global.css),
+		// поэтому нижняя граница наблюдения расширена на те же 12px — считается его настоящее место, а не сдвинутое.
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries
@@ -46,8 +45,8 @@ const { id, index, title } = Astro.props;
 						observer.unobserve(entry.target);
 					});
 			},
-			{ rootMargin: '0px 0px -10% 0px' },
+			{ rootMargin: '0px 0px 12px 0px' },
 		);
-		for (const el of targets.filter((el) => !onScreen.includes(el))) observer.observe(el);
+		for (const el of targets) observer.observe(el);
 	}
 </script>
