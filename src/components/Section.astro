@@ -22,27 +22,32 @@ const { id, index, title } = Astro.props;
 		const targets = [...document.querySelectorAll<HTMLElement>('main section[id] > *')].flatMap((el) =>
 			el.hasAttribute('data-stagger') ? [...(el.children as HTMLCollectionOf<HTMLElement>)] : [el],
 		);
+		const reveal = (el: HTMLElement, i: number) => {
+			el.style.setProperty('--reveal-delay', `${Math.min(i, 4) * 80}ms`);
+			el.classList.add('is-visible');
+			// Когда блок появился, правила появления снимаются — дальше работают его собственные переходы.
+			const done = (event: TransitionEvent) => {
+				if (event.target !== el) return;
+				el.removeEventListener('transitionend', done);
+				el.classList.replace('is-visible', 'revealed');
+				el.style.removeProperty('--reveal-delay');
+			};
+			el.addEventListener('transitionend', done);
+		};
+		// Всё, что хоть краем видно при загрузке, появляется сразу: иначе блок у нижнего края ждёт первого скролла.
+		const onScreen = targets.filter((el) => el.getBoundingClientRect().top < innerHeight);
+		onScreen.forEach(reveal);
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries
 					.filter((entry) => entry.isIntersecting)
 					.forEach((entry, i) => {
-						const el = entry.target as HTMLElement;
-						el.style.setProperty('--reveal-delay', `${Math.min(i, 4) * 80}ms`);
-						el.classList.add('is-visible');
-						// Когда блок появился, правила появления снимаются — дальше работают его собственные переходы.
-						const done = (event: TransitionEvent) => {
-							if (event.target !== el) return;
-							el.removeEventListener('transitionend', done);
-							el.classList.replace('is-visible', 'revealed');
-							el.style.removeProperty('--reveal-delay');
-						};
-						el.addEventListener('transitionend', done);
-						observer.unobserve(el);
+						reveal(entry.target as HTMLElement, i);
+						observer.unobserve(entry.target);
 					});
 			},
 			{ rootMargin: '0px 0px -10% 0px' },
 		);
-		for (const el of targets) observer.observe(el);
+		for (const el of targets.filter((el) => !onScreen.includes(el))) observer.observe(el);
 	}
 </script>
