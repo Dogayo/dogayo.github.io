@@ -1,0 +1,62 @@
+---
+// Страница 404 для GitHub Pages: одна на обе версии, язык выбирается в браузере по адресу.
+import Layout from '../layouts/Layout.astro';
+import { localePaths, profiles } from '../data/profile';
+
+const ru = profiles.ru.ui.notFound;
+const en = profiles.en.ui.notFound;
+---
+
+<Layout
+	title={`404 · ${ru.title}`}
+	description={ru.title}
+	imageAlt={ru.title}
+	locale="ru"
+	noindex
+>
+	<main class="mx-auto flex min-h-screen max-w-[720px] flex-col justify-center gap-6 px-4 py-16">
+		<div class="overflow-hidden rounded-2xl border border-border bg-surface">
+			<div class="flex items-center gap-1.5 bg-surface-2 px-3.5 py-2.5" aria-hidden="true">
+				<span class="size-2.5 rounded-full bg-border"></span>
+				<span class="size-2.5 rounded-full bg-border"></span>
+				<span class="size-2.5 rounded-full bg-border"></span>
+				<span class="ml-2 font-mono text-mono-s text-muted">dogayo@portfolio: ~</span>
+			</div>
+			<div class="flex flex-col gap-1.5 p-4 font-mono text-mono break-all md:p-8">
+				<p><span class="text-accent">$</span> cd <span data-path>…</span></p>
+				<p class="text-muted">bash: cd: <span data-path>…</span>: <span data-en={en.error}>{ru.error}</span></p>
+				<p>
+					<span class="text-accent">$</span>
+					<span class="inline-block h-[1.1em] w-[0.6em] translate-y-[0.15em] animate-blink bg-accent motion-reduce:animate-none" aria-hidden="true"></span>
+				</p>
+			</div>
+		</div>
+
+		<h1 class="text-h2 font-bold">404 · <span data-en={en.title}>{ru.title}</span></h1>
+
+		<div class="flex flex-wrap items-center gap-3">
+			<a
+				href={localePaths.ru}
+				data-home={localePaths.en}
+				class="rounded-[10px] bg-accent px-5 py-3 text-small font-medium text-on-accent transition hover:opacity-90 active:scale-[0.97]"
+			>
+				<span aria-hidden="true">←</span> <span data-en={en.home}>{ru.home}</span>
+			</a>
+		</div>
+	</main>
+</Layout>
+
+<script>
+	// Путь из адреса — в «команду», для адресов /en/… — английские тексты и ссылка.
+	const path = decodeURIComponent(location.pathname);
+	for (const el of document.querySelectorAll('[data-path]')) el.textContent = path;
+
+	const home = document.querySelector<HTMLAnchorElement>('[data-home]')!;
+	const enPath = home.dataset.home!;
+	if (`${path}/`.startsWith(enPath)) {
+		document.documentElement.lang = 'en';
+		for (const el of document.querySelectorAll<HTMLElement>('[data-en]')) el.textContent = el.dataset.en!;
+		home.href = enPath;
+		document.title = `404 · ${document.querySelector('h1 [data-en]')!.textContent}`;
+	}
+</script>
