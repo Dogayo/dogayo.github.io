@@ -10,7 +10,7 @@ interface Props {
 const { id, index, title } = Astro.props;
 ---
 
-<section id={id} class="mx-auto flex max-w-[1072px] scroll-mt-6 flex-col md:scroll-mt-0 gap-6 px-4 pt-16 md:gap-8 md:pt-24">
+<section id={id} class="mx-auto flex max-w-[1072px] scroll-mt-16 flex-col md:scroll-mt-0 gap-6 px-4 pt-16 md:gap-8 md:pt-24">
 	<SectionHeader index={index} title={title} />
 	<slot />
 </section>
