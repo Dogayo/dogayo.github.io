@@ -16,6 +16,27 @@ const { title } = Astro.props;
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<!-- Ставит тему до отрисовки, чтобы не было мигания: сохранённый выбор или системная настройка. -->
+		<script is:inline>
+			(() => {
+				const media = matchMedia('(prefers-color-scheme: dark)');
+				const stored = () => {
+					try {
+						return localStorage.getItem('theme');
+					} catch {
+						return null;
+					}
+				};
+				const apply = () => {
+					const theme = stored() ?? (media.matches ? 'dark' : 'light');
+					document.documentElement.dataset.theme = theme;
+				};
+				apply();
+				media.addEventListener('change', () => {
+					if (!stored()) apply();
+				});
+			})();
+		</script>
 	</head>
 	<body class="min-h-screen bg-bg font-sans text-text antialiased">
 		<slot />
