@@ -1,5 +1,5 @@
 // Собирает PDF-резюме: HTML из шаблона → печать в PDF через headless Chrome.
-// Черновики всех вариантов: node scripts/resume/build.mjs
+// Черновики всех вариантов: node --import ./scripts/resume/assets-hook.mjs scripts/resume/build.mjs
 // PDF для сайта: npm run resume (вариант sidebar, оба языка, в public/).
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';

@@ -9,7 +9,7 @@ const extra = {
 		highlights: [
 			'Ведущий разработчик мобильной криптобиржи: графики и стакан держат 60+ FPS при потоке котировок по WebSocket',
 			'Собрал Starter Kit компании (Clean Architecture, шаблоны Mason, генерация кода по Swagger) — на нём стартовали 3+ проекта',
-			'Спортивное приложение для прогнозов: 50K+ установок и 4,2★ в Google Play',
+			'Спортивное приложение для прогнозов: 100K+ установок в App Store и Google Play',
 			'1-е место на региональном чемпионате WorldSkills «Мобильная разработка» (2020)',
 		],
 		languages: ['Русский — родной', 'Английский — A2, читаю техническую документацию'],
@@ -38,7 +38,7 @@ const extra = {
 		highlights: [
 			'Lead developer of a mobile crypto exchange: charts and order book hold 60+ FPS under a live WebSocket quote stream',
 			'Built the company Starter Kit (Clean Architecture, Mason templates, code generation from Swagger) — 3+ projects started on it',
-			'Sports prediction app: 50K+ installs and 4.2★ on Google Play',
+			'Sports prediction app: 100K+ installs on the App Store and Google Play',
 			'1st place at the regional WorldSkills championship, Mobile Applications Development (2020)',
 		],
 		languages: ['Russian — native', 'English — A2, reading technical documentation'],
