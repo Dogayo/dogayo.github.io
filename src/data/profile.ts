@@ -194,7 +194,7 @@ const ru: Profile = {
 	stats: [
 		{ value: '5+', label: 'лет во Flutter' },
 		{ value: '7', label: 'проектов' },
-		{ value: '50К+', label: 'установок' },
+		{ value: '100К+', label: 'установок' },
 	],
 	contacts: [
 		{ kind: 'email', label: 'dogaev2518@gmail.com', url: 'mailto:dogaev2518@gmail.com' },
@@ -280,7 +280,7 @@ const ru: Profile = {
 				'Firebase: пуши, аналитика, dynamic links',
 			],
 			results: [
-				'50K+ установок и 4,2★ в Google Play',
+				'100K+ установок в App Store и Google Play',
 			],
 			tags: ['Flutter', 'BLoC', 'Firebase', 'In-app purchases'],
 			screen: {
@@ -526,7 +526,7 @@ const en: Profile = {
 	stats: [
 		{ value: '5+', label: 'years in Flutter' },
 		{ value: '7', label: 'projects' },
-		{ value: '50K+', label: 'installs' },
+		{ value: '100K+', label: 'installs' },
 	],
 	contacts: ru.contacts,
 	experience: {
@@ -608,7 +608,7 @@ const en: Profile = {
 				'Firebase: push notifications, analytics, dynamic links',
 			],
 			results: [
-				'50K+ installs and 4.2★ on Google Play',
+				'100K+ installs on the App Store and Google Play',
 			],
 			tags: ['Flutter', 'BLoC', 'Firebase', 'In-app purchases'],
 			screen: {
