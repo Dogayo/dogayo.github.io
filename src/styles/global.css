@@ -74,18 +74,20 @@
 }
 
 /* Печать neofetch в шапке: команда набирается по буквам, затем строки вывода появляются по очереди.
-   Только CSS: текст сразу есть в DOM для читалок и без JS; при «уменьшить движение» — без анимации. */
+   Только CSS: текст сразу есть в DOM для читалок и без JS; при «уменьшить движение» — без анимации.
+   Заливка только backwards: после анимации остаются обычные стили. С both конечный кадр шаговой
+   анимации из-за погрешности времени мог остаться первым — последние строки так и не появлялись. */
 @media (prefers-reduced-motion: no-preference) {
 	.term-typing {
 		display: inline-block;
 		overflow: hidden;
 		white-space: nowrap;
 		vertical-align: bottom;
-		animation: term-typing 500ms steps(var(--chars)) both;
+		animation: term-typing 500ms steps(var(--chars)) backwards;
 	}
 
 	.term-line {
-		animation: term-line 1ms steps(1) both;
+		animation: term-line 1ms steps(1) backwards;
 		animation-delay: calc(600ms + var(--line) * 90ms);
 	}
 }
