@@ -21,7 +21,9 @@ const nav = [
 const languages = Object.entries(localePaths) as [Locale, string][];
 ---
 
-<header class="site-header sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
+<!-- Фон шапки — псевдоэлемент, продолжающийся вверх на экран: во встроенных браузерах iOS (Telegram и др.)
+     и в Safari страница видна и над верхним краем окна, под панелями браузера, — там тоже размытие, а не текст. -->
+<header class="site-header sticky top-0 z-50 border-b border-border before:absolute before:inset-x-0 before:-top-[100vh] before:bottom-0 before:-z-10 before:bg-bg/80 before:backdrop-blur-md">
 	<div class="mx-auto flex max-w-[1072px] items-center justify-between gap-3 px-4 pt-4 pb-2 md:pb-4">
 		<!-- На самых узких экранах (320px) логотип сокращается до «~/», иначе шапка не помещается. -->
 		<a href={localePaths[locale]} aria-label="~/dogayo" data-logo class="font-mono text-mono text-text">~/<span class="max-[359px]:hidden">dogayo</span></a>
